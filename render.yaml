@@ -10,9 +10,4 @@ services:
         value: production
       - key: JWT_SECRET
         generateValue: true
-      - key: DATABASE_FILE
-        value: /var/data/db.sqlite
-    disk:
-      name: sqlite-data
-      mountPath: /var/data
-      sizeGB: 1
+
