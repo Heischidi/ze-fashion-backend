@@ -29,9 +29,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Serve static frontend files and images
-app.use("/", express.static(FRONTEND_DIR));
+// Serve images if available (e.g. uploads), but disable full frontend serving for production API
+// app.use("/", express.static(FRONTEND_DIR));
 app.use("/images", express.static(IMAGES_DIR));
-if (!fs.existsSync(IMAGES_DIR)) fs.mkdirSync(IMAGES_DIR, { recursive: true });
+if (!fs.existsSync(IMAGES_DIR)) {
+  // Try to create it silently or ignore
+  try { fs.mkdirSync(IMAGES_DIR, { recursive: true }); } catch (e) { }
+}
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -45,13 +49,9 @@ app.use('/api/profile', require('./routes/profile'));
 // Health check
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 
-// Fallback to index.html for SPA-like navigation (if needed) or just serve files
-app.get("*", (req, res) => {
-  const f = path.join(FRONTEND_DIR, req.path);
-  if (fs.existsSync(f) && fs.statSync(f).isFile()) {
-    return res.sendFile(f);
-  }
-  return res.sendFile(path.join(FRONTEND_DIR, "index.html"));
+// Root route - Just say API is running
+app.get("/", (req, res) => {
+  res.send("Ze Fashion Backend API is running. Access endpoints at /api/...");
 });
 
 app.listen(PORT, () => {
