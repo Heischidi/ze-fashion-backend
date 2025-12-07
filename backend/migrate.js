@@ -45,6 +45,7 @@ async function seed() {
     variants TEXT,
     stock INTEGER DEFAULT 0,
     bestseller INTEGER DEFAULT 0,
+    new_arrival INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );`);
 
