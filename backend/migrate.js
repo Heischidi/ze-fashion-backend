@@ -99,7 +99,10 @@ async function seed() {
     { name: "Accents", slug: "accents" },
     { name: "Sale", slug: "sale" },
     { name: "New Arrivals", slug: "new-arrivals" },
-    { name: "Bestsellers", slug: "bestsellers" }
+    { name: "Bestsellers", slug: "bestsellers" },
+    { name: "Men", slug: "men" },
+    { name: "Women", slug: "women" },
+    { name: "Kids", slug: "kids" }
   ];
 
   for (const cat of categories) {
