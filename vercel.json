@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/((?!backend/).*)",
+            "destination": "/ze-fashion-brand/$1"
+        }
+    ]
+}
