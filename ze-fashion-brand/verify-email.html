@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Email - Zë Luxury Fashion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="font-sans bg-black text-white flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full bg-zinc-900 p-8 rounded-lg shadow-lg text-center border border-zinc-800">
+        <div id="loading" class="py-8">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+            <h2 class="text-xl font-serif text-white">Verifying your email...</h2>
+        </div>
+
+        <div id="success" class="hidden py-8">
+            <div
+                class="w-16 h-16 bg-green-900/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-serif text-white mb-2">Email Verified!</h2>
+            <p class="text-gray-400 mb-6">Your account has been successfully activated.</p>
+            <a href="signin.html"
+                class="inline-block bg-white text-black px-6 py-3 rounded font-medium hover:bg-gray-200 transition-colors">
+                Sign In Now
+            </a>
+        </div>
+
+        <div id="error" class="hidden py-8">
+            <div
+                class="w-16 h-16 bg-red-900/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-serif text-white mb-2">Verification Failed</h2>
+            <p id="errorMessage" class="text-gray-400 mb-6">The verification link is invalid or has expired.</p>
+            <a href="signin.html" class="text-gray-400 hover:text-white underline">Back to Sign In</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const status = params.get('status');
+            const message = params.get('message');
+
+            const loading = document.getElementById('loading');
+            const success = document.getElementById('success');
+            const error = document.getElementById('error');
+            const errorMessage = document.getElementById('errorMessage');
+
+            loading.classList.add('hidden');
+
+            if (status === 'success') {
+                success.classList.remove('hidden');
+                // Auto redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = 'signin.html';
+                }, 3000);
+            } else {
+                error.classList.remove('hidden');
+                if (message) {
+                    errorMessage.textContent = message;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

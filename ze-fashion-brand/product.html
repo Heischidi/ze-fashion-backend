@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Details - Zë Luxury Fashion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="font-sans bg-black text-white">
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <a href="index.html" class="text-3xl font-serif font-bold tracking-wider text-white">Zë</a>
+        <div class="hidden md:flex space-x-8">
+          <a href="index.html" class="nav-link text-gray-300 hover:text-white font-medium">Home</a>
+          <a href="men.html" class="nav-link text-gray-300 hover:text-white font-medium">Men</a>
+          <a href="women.html" class="nav-link text-gray-300 hover:text-white font-medium">Women</a>
+          <a href="kids.html" class="nav-link text-gray-300 hover:text-white font-medium">Kids</a>
+          <a href="collections.html" class="nav-link text-gray-300 hover:text-white font-medium">Collections</a>
+          <a href="about.html" class="nav-link text-gray-300 hover:text-white font-medium">About</a>
+          <a href="lookbook.html" class="nav-link text-gray-300 hover:text-white font-medium">Lookbook</a>
+          <a href="contact.html" class="nav-link text-gray-300 hover:text-white font-medium">Contact</a>
+        </div>
+        <div class="flex items-center space-x-4 text-white">
+          <a href="search.html" class="hidden md:block hover:scale-110 transition-transform" title="Search">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </a>
+          <a href="cart.html" class="hidden md:block hover:scale-110 transition-transform relative" title="View Cart">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8m-8 0a2 2 0 100 4 2 2 0 000-4zm8 0a2 2 0 100 4 2 2 0 000-4z">
+              </path>
+            </svg>
+            <span
+              class="cart-count hidden absolute -top-1 -right-1 bg-yellow-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0</span>
+          </a>
+          <a href="signin.html" class="hidden md:block hover:scale-110 transition-transform" title="Sign In">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          </a>
+          <button id="mobileMenuBtn" class="md:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu"
+    class="mobile-menu fixed top-0 right-0 h-full w-80 shadow-2xl md:hidden z-50 bg-zinc-900 border-l border-zinc-800">
+    <div class="p-6">
+      class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Lookbook</a>
+      <a href="contact.html"
+        class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Contact</a>
+      <a href="cart.html" class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Cart</a>
+    </div>
+  </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-6 pt-32 pb-20">
+    <div id="productDetail" class="min-h-[60vh]">
+      <!-- Content injected by script.js -->
+      <div class="flex items-center justify-center h-full">
+        <p class="text-gray-500">Loading product details...</p>
+      </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="mt-24 border-t border-zinc-800 pt-16">
+      <h2 class="text-3xl font-serif mb-10 text-center text-white">You May Also Like</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="recommendedProducts">
+        <!-- Loaded via JS -->
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-black text-white py-12 px-6 border-t border-zinc-800">
+    <div class="max-w-7xl mx-auto text-center">
+      <p class="text-gray-400">© 2025 Zë Luxury Fashion. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Product Detail Logic
+    async function loadProduct() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const container = document.getElementById('productDetail');
+
+      if (!id) {
+        container.innerHTML = '<p class="text-center text-red-500">Product not found.</p>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_ROOT}/api/products/${id}`);
+        if (!res.ok) throw new Error('Product not found');
+
+        const product = await res.json();
+
+        // Update page title
+        document.title = `${product.title} - Zë Luxury Fashion`;
+
+        container.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-12 items-start">
+                    <div class="space-y-4">
+                        <div class="aspect-[3/4] bg-zinc-900 overflow-hidden rounded-sm">
+                            <img id="mainImage" src="${product.images?.[0] || product.image || '/images/placeholder.png'}" 
+                                 class="w-full h-full object-cover" alt="${product.title}">
+                        </div>
+                        <div class="flex gap-4 overflow-x-auto pb-2">
+                            ${(product.images || [product.image]).map(img => `
+                                <button onclick="document.getElementById('mainImage').src='${img}'" 
+                                        class="w-20 h-20 flex-shrink-0 rounded-sm overflow-hidden border border-zinc-800 hover:border-yellow-500 transition-colors">
+                                    <img src="${img}" class="w-full h-full object-cover">
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-8">
+                        <div>
+                            <h1 class="text-4xl md:text-5xl font-serif mb-4 text-white">${product.title}</h1>
+                            <div class="flex items-center gap-4">
+                                <span class="text-2xl font-light text-yellow-500">₦${(product.price).toLocaleString()}</span>
+                                ${product.compare_at_price ? `<span class="text-lg text-gray-500 line-through">₦${(product.compare_at_price).toLocaleString()}</span>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="prose prose-invert max-w-none text-gray-400">
+                            <p>${product.description || 'No description available.'}</p>
+                        </div>
+
+                        <div class="space-y-6 border-t border-zinc-800 pt-8">
+                            <!-- Size Selector -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-3">Select Size</label>
+                                <div class="flex flex-wrap gap-3">
+                                    ${['XS', 'S', 'M', 'L', 'XL'].map(size => `
+                                        <button onclick="selectSize(this)" class="size-btn w-12 h-12 border border-zinc-700 rounded-sm flex items-center justify-center hover:border-yellow-500 hover:text-yellow-500 transition-colors text-gray-400">
+                                            ${size}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-3">Quantity</label>
+                                <div class="flex items-center border border-zinc-700 w-32 rounded-sm">
+                                    <button onclick="updateQty(-1)" class="px-3 py-2 text-gray-400 hover:text-white">-</button>
+                                    <input type="number" id="qty" value="1" min="1" class="w-full text-center bg-transparent border-none focus:ring-0 text-white" readonly>
+                                    <button onclick="updateQty(1)" class="px-3 py-2 text-gray-400 hover:text-white">+</button>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button onclick="addToCart(${product.id}, '${product.title.replace(/'/g, "\\'")}', '${product.image || ''}', ${product.price})" 
+                                        class="flex-1 btn-primary py-4 text-black font-medium uppercase tracking-wider hover:bg-yellow-500 transition-colors">
+                                    Add to Cart
+                                </button>
+                                <button id="wishlistBtn" onclick="addToWishlist(${product.id})" 
+                                        class="w-14 flex items-center justify-center border border-zinc-700 hover:border-yellow-500 text-gray-400 hover:text-yellow-500 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4 text-sm text-gray-500 pt-8">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>Free shipping on orders over ₦100,000</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span>Authenticity Guaranteed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+        // Load recommendations
+        loadRecommendations(product.category);
+
+      } catch (e) {
+        console.error(e);
+        container.innerHTML = '<p class="text-center text-red-500 py-10">Failed to load product details.</p>';
+      }
+    }
+
+    async function loadRecommendations(category) {
+      try {
+        const res = await fetch(`${API_ROOT}/api/products?limit=3`);
+        const data = await res.json();
+        const container = document.getElementById('recommendedProducts');
+
+        if (data.items && data.items.length > 0) {
+          container.innerHTML = data.items.map(p => `
+                    <div class="group cursor-pointer" onclick="window.location.href='product.html?id=${p.id}'">
+                        <div class="relative overflow-hidden mb-4 aspect-[3/4] bg-zinc-900">
+                            <img src="${p.image || '/images/placeholder.png'}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        </div>
+                        <h3 class="font-serif text-lg mb-1 text-white">${p.title}</h3>
+                        <p class="text-gray-400">₦${(p.price).toLocaleString()}</p>
+                    </div>
+                `).join('');
+        }
+      } catch (e) { console.error(e); }
+    }
+
+
+    let isWishlisted = false;
+    const wishlistBtnId = 'wishlistBtn';
+
+    async function checkWishlistStatus(productId) {
+      const token = sessionStorage.getItem('ze_token');
+      if (!token) return;
+
+      try {
+        const res = await fetch(API_ROOT + '/api/wishlist', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        const items = data.items || [];
+
+        // Check if product is in wishlist
+        // Backend DELETE supports removing by product_id, so we just check for presence
+        if (items.some(i => i.product_id === productId || i.id === productId)) {
+          isWishlisted = true;
+          updateWishlistBtnUI();
+        }
+      } catch (e) {
+        console.error('Error checking wishlist status', e);
+      }
+    }
+
+    function updateWishlistBtnUI() {
+      const btn = document.getElementById(wishlistBtnId);
+      if (!btn) return;
+
+      if (isWishlisted) {
+        // Yellow / Active State
+        btn.classList.remove('text-gray-400', 'border-zinc-700', 'hover:border-yellow-500', 'hover:text-yellow-500'); // Remove default & hover
+        btn.classList.add('text-yellow-500', 'border-yellow-500'); // Add active styles
+        // Fill the heart icon
+        btn.innerHTML = `<svg class="w-6 h-6" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>`;
+      } else {
+        // Black / Default State
+        btn.classList.remove('text-yellow-500', 'border-yellow-500');
+        btn.classList.add('text-gray-400', 'border-zinc-700', 'hover:border-yellow-500', 'hover:text-yellow-500');
+        // Outline heart icon
+        btn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>`;
+      }
+    }
+
+    async function addToWishlist(productId) {
+      const token = sessionStorage.getItem('ze_token');
+      if (!token) {
+        showToast('Please sign in to manage wishlist');
+        return;
+      }
+
+      const btn = document.getElementById(wishlistBtnId);
+      if (btn) btn.style.opacity = '0.5'; // Loading feedback
+
+      try {
+        if (isWishlisted) {
+          // REMOVE
+          const res = await fetch(`${API_ROOT}/api/wishlist/${productId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (res.ok) {
+            isWishlisted = false;
+            showToast('Removed from wishlist');
+            updateWishlistBtnUI();
+          } else {
+            showToast('Failed to remove');
+          }
+        } else {
+          // ADD
+          const res = await fetch(API_ROOT + '/api/wishlist', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ product_id: productId })
+          });
+          if (res.ok) {
+            isWishlisted = true;
+            showToast('Added to wishlist');
+            updateWishlistBtnUI();
+          } else {
+            showToast('Failed to add');
+          }
+        }
+      } catch (e) {
+        console.error(e);
+        showToast('Error updating wishlist');
+      } finally {
+        if (btn) btn.style.opacity = '1';
+      }
+    }
+
+    function updateQty(change) {
+      const el = document.getElementById('qty');
+      let val = parseInt(el.value) + change;
+      if (val < 1) val = 1;
+      el.value = val;
+    }
+
+    let selectedSize = null;
+
+    function selectSize(btn) {
+      // Remove active class from all
+      document.querySelectorAll('.size-btn').forEach(b => {
+        b.classList.remove('border-yellow-500', 'text-yellow-500');
+        b.classList.add('border-zinc-700', 'text-gray-400');
+      });
+
+      // Add active class to clicked
+      btn.classList.remove('border-zinc-700', 'text-gray-400');
+      btn.classList.add('border-yellow-500', 'text-yellow-500');
+
+      selectedSize = btn.textContent.trim();
+    }
+
+    loadProduct().then(() => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (id) checkWishlistStatus(parseInt(id));
+    });
+  </script>
+</body>
+
+</html>

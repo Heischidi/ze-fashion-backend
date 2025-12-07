@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Product - Zë Fashion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <!-- nav -->
+    <main class="max-w-4xl mx-auto p-6">
+      <div id="productDetail"></div>
+    </main>
+    <script>
+      const API_ROOT = window.API_ROOT || "";
+      function q(name) {
+        return new URLSearchParams(location.search).get(name);
+      }
+      async function loadProduct() {
+        const id = q("id");
+        if (!id) {
+          document.getElementById("productDetail").innerHTML = "No product id";
+          return;
+        }
+        const res = await fetch(API_ROOT + "/api/products/" + id);
+        if (!res.ok) {
+          document.getElementById("productDetail").innerHTML =
+            "Product not found";
+          return;
+        }
+        const p = await res.json();
+        document.getElementById("productDetail").innerHTML = `
+        <div class="grid md:grid-cols-2 gap-6">
+          <div><img src="${
+            p.image_url || "/images/placeholder.png"
+          }" style="width:100%;height:400px;object-fit:cover;border-radius:8px"/></div>
+          <div>
+            <h1 class="text-2xl font-serif">${p.name}</h1>
+            <div class="text-xl mt-2">₦${(p.price / 100).toFixed(2)}</div>
+            <p class="mt-4">${p.description || ""}</p>
+            <div class="mt-6 flex gap-2">
+              <button id="addToCartBtn" class="px-4 py-2 rounded bg-black text-white">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      `;
+        document
+          .getElementById("addToCartBtn")
+          .addEventListener("click", async () => {
+            // reuse API to get product then add to cart via script.js functions (assumes they are loaded)
+            try {
+              const res2 = await fetch(API_ROOT + "/api/products/" + id);
+              const p2 = await res2.json();
+              // add direct to cart
+              if (window.addToCartProductObj) {
+                addToCartProductObj(p2, 1);
+              } else {
+                // fallback
+                const cart = JSON.parse(
+                  localStorage.getItem("ze_cart_v1") || "[]"
+                );
+                cart.push({
+                  id: p2.id,
+                  title: p2.name,
+                  price: p2.price,
+                  image: p2.image_url,
+                  qty: 1,
+                });
+                localStorage.setItem("ze_cart_v1", JSON.stringify(cart));
+                alert("Added to cart");
+              }
+            } catch (e) {
+              console.error(e);
+              alert("Failed to add to cart");
+            }
+          });
+      }
+      loadProduct();
+    </script>
+    <script src="/script.js"></script>
+  </body>
+</html>

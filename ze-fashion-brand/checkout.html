@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout - Zë Luxury Fashion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="font-sans bg-gray-50">
+    <div class="max-w-4xl mx-auto py-12 px-6">
+        <h1 class="text-4xl font-serif mb-8 text-center">Checkout</h1>
+
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Shipping Form -->
+            <div class="md:w-2/3 bg-white p-8 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-serif mb-6">Shipping Details</h2>
+                <form id="checkoutForm" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                            <input type="text" id="firstName" required
+                                class="w-full border border-gray-300 p-3 rounded focus:ring-gold focus:border-gold outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                            <input type="text" id="lastName" required
+                                class="w-full border border-gray-300 p-3 rounded focus:ring-gold focus:border-gold outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <input type="text" id="address" required
+                            class="w-full border border-gray-300 p-3 rounded focus:ring-gold focus:border-gold outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                            <input type="text" id="city" required
+                                class="w-full border border-gray-300 p-3 rounded focus:ring-gold focus:border-gold outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Postal Code</label>
+                            <input type="text" id="postalCode" required
+                                class="w-full border border-gray-300 p-3 rounded focus:ring-gold focus:border-gold outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <input type="tel" id="phone" required
+                            class="w-full border border-gray-300 p-3 rounded focus:ring-gold focus:border-gold outline-none">
+                    </div>
+
+                    <!-- Gift Options -->
+                    <div class="pt-6 border-t mt-6">
+                        <h2 class="text-2xl font-serif mb-4">Gift Options</h2>
+                        <div class="flex items-center gap-2 mb-4">
+                            <input type="checkbox" id="isGift" class="w-5 h-5 accent-black">
+                            <label for="isGift"
+                                class="text-sm font-medium text-gray-700 select-none cursor-pointer">This order is a
+                                gift</label>
+                        </div>
+                        <div id="giftMessageContainer" class="hidden space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Recipient Email</label>
+                                <input type="email" id="recipientEmail"
+                                    class="w-full border border-gray-300 p-3 rounded focus:ring-gold focus:border-gold outline-none"
+                                    placeholder="friend@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Gift Message</label>
+                                <textarea id="giftMessage" rows="3"
+                                    class="w-full border border-gray-300 p-3 rounded focus:ring-gold focus:border-gold outline-none"
+                                    placeholder="Enter your personal message here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t">
+                        <h2 class="text-2xl font-serif mb-6">Payment</h2>
+                        <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                            <p class="text-gray-600 text-sm">Payment integration is in demo mode. No actual charge will
+                                be made.</p>
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-black text-white p-4 rounded mt-6 hover:bg-gray-800 transition-colors uppercase tracking-widest font-medium">
+                            Place Order
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="md:w-1/3">
+                <div class="bg-white p-8 rounded-lg shadow-sm sticky top-8">
+                    <h2 class="text-xl font-serif mb-4">Order Summary</h2>
+                    <div id="orderSummary" class="space-y-4 mb-6 max-h-60 overflow-y-auto custom-scrollbar">
+                        <!-- Items injected here -->
+                    </div>
+                    <div class="border-t pt-4 space-y-2">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Subtotal</span>
+                            <span id="summarySubtotal">₦0.00</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Shipping</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Tax</span>
+                            <span id="summaryTax">₦0.00</span>
+                        </div>
+                        <div class="flex justify-between font-medium text-lg pt-2 border-t">
+                            <span>Total</span>
+                            <span id="summaryTotal">₦0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const API_ROOT = window.API_ROOT || 'http://localhost:4000';
+            let cart = [];
+            let subtotal = 0;
+
+            // 1. Safe Cart Loading
+            try {
+                cart = JSON.parse(localStorage.getItem("ze_cart_v1") || "[]");
+            } catch (e) {
+                console.error("Cart parse error", e);
+                cart = [];
+            }
+
+            if (cart.length === 0) {
+                // Determine if we are already on cart page to avoid loop
+                if (!window.location.href.includes('cart.html')) {
+                    window.location.href = 'cart.html';
+                }
+                return;
+            }
+
+            // 2. Render Cart Summary
+            const summaryContainer = document.getElementById('orderSummary');
+            if (summaryContainer) {
+                try {
+                    summaryContainer.innerHTML = cart.map(item => {
+                        subtotal += item.price * item.quantity;
+                        return `
+                            <div class="flex gap-4 text-sm">
+                                <img src="${item.image || '/images/placeholder.png'}" class="w-12 h-12 object-cover rounded">
+                                <div class="flex-1">
+                                    <p class="font-medium truncate">${item.title}</p>
+                                    <p class="text-gray-500">Qty: ${item.quantity}</p>
+                                </div>
+                                <div>₦${((item.price * item.quantity)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                            </div>
+                        `;
+                    }).join('');
+                } catch (e) {
+                    console.error("Render error", e);
+                    summaryContainer.innerHTML = '<p class="text-red-500">Error loading cart items</p>';
+                }
+            }
+
+            // 3. Update Totals
+            const tax = subtotal * 0.08;
+            const total = subtotal + tax;
+
+            if (document.getElementById('summarySubtotal'))
+                document.getElementById('summarySubtotal').textContent = '₦' + (subtotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            if (document.getElementById('summaryTax'))
+                document.getElementById('summaryTax').textContent = '₦' + (tax).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            if (document.getElementById('summaryTotal'))
+                document.getElementById('summaryTotal').textContent = '₦' + (total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            // 4. Gift Toggle Logic
+            const isGiftEl = document.getElementById('isGift');
+            if (isGiftEl) {
+                isGiftEl.addEventListener('change', function () {
+                    const container = document.getElementById('giftMessageContainer');
+                    if (this.checked) {
+                        container.classList.remove('hidden');
+                        const msgInput = document.getElementById('giftMessage');
+                        if (msgInput) msgInput.focus();
+                    } else {
+                        container.classList.add('hidden');
+                    }
+                });
+            }
+
+            // 5. Checkout Handler
+            const checkoutForm = document.getElementById('checkoutForm');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', async (e) => {
+                    e.preventDefault(); // Critical: Stop reload
+
+                    const submitBtn = e.target.querySelector('button[type="submit"]');
+                    const originalText = submitBtn ? submitBtn.textContent : 'Place Order';
+                    if (submitBtn) {
+                        submitBtn.textContent = 'Processing...';
+                        submitBtn.disabled = true;
+                    }
+
+                    try {
+                        const token = sessionStorage.getItem('ze_token');
+                        if (!token) {
+                            showToast('Please sign in to complete your order');
+                            // Store current URL to redirect back
+                            setTimeout(() => window.location.href = 'signin.html?redirect=checkout.html', 1500);
+                            return;
+                        }
+
+                        // Gather FormData
+                        const shippingAddress = {
+                            firstName: document.getElementById('firstName')?.value || '',
+                            lastName: document.getElementById('lastName')?.value || '',
+                            address: document.getElementById('address')?.value || '',
+                            city: document.getElementById('city')?.value || '',
+                            postalCode: document.getElementById('postalCode')?.value || '',
+                            phone: document.getElementById('phone')?.value || ''
+                        };
+
+                        const isGift = document.getElementById('isGift')?.checked || false;
+                        const giftMessage = document.getElementById('giftMessage')?.value || '';
+                        const recipientEmail = document.getElementById('recipientEmail')?.value || '';
+
+                        const res = await fetch(`${API_ROOT}/api/orders`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                items: cart,
+                                total: total,
+                                shipping_address: shippingAddress,
+                                is_gift: isGift,
+                                gift_message: giftMessage,
+                                recipient_email: recipientEmail
+                            })
+                        });
+
+                        if (res.ok) {
+                            localStorage.removeItem('ze_cart_v1');
+                            showToast('Order Processed Successfully!');
+                            setTimeout(() => window.location.href = 'track-order.html', 1000);
+                        } else {
+                            const data = await res.json();
+                            showToast(data.error || 'Failed to place order');
+                            if (submitBtn) {
+                                submitBtn.textContent = originalText;
+                                submitBtn.disabled = false;
+                            }
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        showToast('Error: ' + err.message);
+                        if (err.message.includes('Failed to fetch')) {
+                            showToast('Could not connect to server');
+                        }
+                        if (submitBtn) {
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    }
+                });
+            } else {
+                console.error("Checkout form not found!");
+            }
+        });
+    </script>
+</body>
+
+</html>
