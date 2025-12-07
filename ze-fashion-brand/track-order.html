@@ -83,109 +83,100 @@
                     <p class="mt-4 text-gray-400">Loading your orders...</p>
                 </div>
             </div>
-        </div>
-    </div>
+            try {
+            const response = await fetch(`${API_ROOT}/api/orders`, {
+            headers: {
+            'Authorization': `Bearer ${token}`
+            }
+            });
 
-    <script src="script.js"></script>
-    <script>
-        async function fetchOrders() {
-            const container = document.getElementById('ordersContainer');
-            const token = sessionStorage.getItem('ze_token');
-            const API_ROOT = window.API_ROOT || 'http://localhost:4000';
+            if (!response.ok) throw new Error('Failed to fetch orders');
 
-            if (!token) {
-                window.location.href = 'signin.html';
-                return;
+            const orders = await response.json();
+
+            if (orders.length === 0) {
+            container.innerHTML = `
+            <div class="text-center py-12 bg-zinc-900 rounded-lg shadow-sm border border-zinc-800">
+                <p class="text-gray-400 mb-4">You haven't placed any orders yet.</p>
+                <a href="collections.html"
+                    class="inline-block bg-white text-black px-6 py-2 rounded hover:bg-gray-200 transition-colors">Start
+                    Shopping</a>
+            </div>
+            `;
+            return;
             }
 
-            try {
-                const response = await fetch(`${API_ROOT}/api/orders`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+            container.innerHTML = orders.map(order => {
+            const date = new Date(order.created_at).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric'
+            });
 
-                if (!response.ok) throw new Error('Failed to fetch orders');
-
-                const orders = await response.json();
-
-                if (orders.length === 0) {
-                    container.innerHTML = `
-                        <div class="text-center py-12 bg-zinc-900 rounded-lg shadow-sm border border-zinc-800">
-                            <p class="text-gray-400 mb-4">You haven't placed any orders yet.</p>
-                            <a href="collections.html" class="inline-block bg-white text-black px-6 py-2 rounded hover:bg-gray-200 transition-colors">Start Shopping</a>
-                        </div>
-                    `;
-                    return;
-                }
-
-                container.innerHTML = orders.map(order => {
-                    const date = new Date(order.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric', month: 'long', day: 'numeric'
-                    });
-
-                    return `
-                        <div class="bg-zinc-900 rounded-lg shadow-sm overflow-hidden border border-zinc-800">
-                            <div class="p-6 border-b border-zinc-800 flex flex-col md:flex-row justify-between md:items-center gap-4">
-                                <div>
-                                    <p class="text-sm text-gray-400">Order Placed</p>
-                                    <p class="font-medium text-white">${date}</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-400">Order ID</p>
-                                    <p class="font-medium text-white">#${order.id}</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-400">Total</p>
-                                    <p class="font-medium text-white">₦${(order.total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                                </div>
-                                <div>
-                                    <span class="px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(order.status)}">
-                                        ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="p-6">
-                                <div class="space-y-4">
-                                    ${order.items.map(item => `
-                                        <div class="flex gap-4">
-                                            <img src="${item.image || '/images/placeholder.png'}" class="w-16 h-16 object-cover rounded bg-zinc-800">
-                                            <div>
-                                                <h4 class="font-medium text-white">${item.title}</h4>
-                                                <p class="text-sm text-gray-400">Qty: ${item.quantity}</p>
-                                                <p class="text-sm font-medium text-white">₦${(item.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
+            return `
+            <div class="bg-zinc-900 rounded-lg shadow-sm overflow-hidden border border-zinc-800">
+                <div
+                    class="p-6 border-b border-zinc-800 flex flex-col md:flex-row justify-between md:items-center gap-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Order Placed</p>
+                        <p class="font-medium text-white">${date}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Order ID</p>
+                        <p class="font-medium text-white">#${order.id}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Total</p>
+                        <p class="font-medium text-white">₦${(order.total).toLocaleString(undefined, {
+                            minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                    </div>
+                    <div>
+                        <span class="px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(order.status)}">
+                            ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                        </span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        ${order.items.map(item => `
+                        <div class="flex gap-4">
+                            <img src="${item.image || '/images/placeholder.png'}"
+                                class="w-16 h-16 object-cover rounded bg-zinc-800">
+                            <div>
+                                <h4 class="font-medium text-white">${item.title}</h4>
+                                <p class="text-sm text-gray-400">Qty: ${item.quantity}</p>
+                                <p class="text-sm font-medium text-white">₦${(item.price).toLocaleString(undefined, {
+                                    minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                             </div>
                         </div>
-                    `;
-                }).join('');
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+            }).join('');
 
             } catch (err) {
-                console.error(err);
-                container.innerHTML = `
-                    <div class="text-center py-12 text-red-500">
-                        Failed to load orders. Please try again later.
-                    </div>
-                `;
+            console.error(err);
+            container.innerHTML = `
+            <div class="text-center py-12 text-red-500">
+                Failed to load orders. Please try again later.
+            </div>
+            `;
             }
-        }
+            }
 
-        function getStatusColor(status) {
+            function getStatusColor(status) {
             switch (status) {
-                case 'pending': return 'bg-yellow-900/20 text-yellow-500 border-yellow-500/20';
-                case 'shipped': return 'bg-blue-900/20 text-blue-500 border-blue-500/20';
-                case 'delivered': return 'bg-green-900/20 text-green-500 border-green-500/20';
-                default: return 'bg-zinc-800 text-gray-400 border-zinc-700';
+            case 'pending': return 'bg-yellow-900/20 text-yellow-500 border-yellow-500/20';
+            case 'shipped': return 'bg-blue-900/20 text-blue-500 border-blue-500/20';
+            case 'delivered': return 'bg-green-900/20 text-green-500 border-green-500/20';
+            default: return 'bg-zinc-800 text-gray-400 border-zinc-700';
             }
-        }
+            }
 
-        document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('DOMContentLoaded', () => {
             fetchOrders();
-        });
-    </script>
+            });
+            </script>
 </body>
 
 </html>

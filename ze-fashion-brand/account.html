@@ -192,8 +192,8 @@
     <script>
 
 
-        // Safely get API_ROOT without redeclaring if it exists
-        const BASE_URL = (typeof API_ROOT !== 'undefined') ? API_ROOT : (window.API_ROOT || '');
+        // Safely get API_ROOT
+        const BASE_URL = window.API_ROOT;
 
         const accountToken = sessionStorage.getItem('ze_token');
 

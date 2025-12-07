@@ -1,3 +1,6 @@
+// Global API URL - Change this to your live backend URL
+window.API_ROOT = 'https://ze-fashion-backend.onrender.com';
+
 // Global Toast Notification
 function showToast(message) {
   const el = document.createElement('div');

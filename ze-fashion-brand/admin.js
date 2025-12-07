@@ -1,5 +1,5 @@
 (function () {
-    const API_ROOT = window.API_ROOT || '';
+    const API_ROOT = window.API_ROOT;
     const token = sessionStorage.getItem('ze_token');
     const user = JSON.parse(sessionStorage.getItem('ze_user') || '{}');
 
