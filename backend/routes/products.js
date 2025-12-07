@@ -13,10 +13,14 @@ router.get('/', async (req, res) => {
         const params = [];
 
         if (category) {
-            const cat = await db.get('SELECT id FROM categories WHERE slug = ?', [category.toLowerCase()]);
-            if (cat) {
-                query += ' AND category_id = ?';
-                params.push(cat.id);
+            if (category === 'new-arrivals') {
+                query += ' AND new_arrival = 1';
+            } else {
+                const cat = await db.get('SELECT id FROM categories WHERE slug = ?', [category.toLowerCase()]);
+                if (cat) {
+                    query += ' AND category_id = ?';
+                    params.push(cat.id);
+                }
             }
         }
 

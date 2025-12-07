@@ -40,7 +40,9 @@ const upload = multer({ storage: storage });
 router.post('/products', adminMiddleware, upload.array('images'), async (req, res) => {
     try {
         const { title, description, price, category, bestseller, new_arrival } = req.body;
-        const images = req.files ? req.files.map(f => `/images/${f.filename}`) : [];
+        // Use full URL for uploaded images so Vercel can find them on Render
+        const BASE_URL = 'https://ze-fashion-backend.onrender.com';
+        const images = req.files ? req.files.map(f => `${BASE_URL}/images/${f.filename}`) : [];
         const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
 
         const db = await getDb();
@@ -76,7 +78,8 @@ router.put('/products/:id', adminMiddleware, upload.array('images'), async (req,
         let finalImages = existing.images;
         // If new images are uploaded, replace old ones (basic logic for now)
         if (req.files && req.files.length > 0) {
-            const newImages = req.files.map(f => `/images/${f.filename}`);
+            const BASE_URL = 'https://ze-fashion-backend.onrender.com';
+            const newImages = req.files.map(f => `${BASE_URL}/images/${f.filename}`);
             finalImages = JSON.stringify(newImages);
         }
 
