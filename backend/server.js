@@ -12,7 +12,7 @@ seed().catch(err => console.error("Migration failed:", err));
 const PORT = process.env.PORT || 4000;
 const IMAGES_DIR = path.join(__dirname, "images");
 
-const app = express();
+
 const session = require('express-session');
 const passport = require('./config/passport');
 
