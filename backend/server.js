@@ -1,11 +1,11 @@
-// backend/server.js
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const fs = require("fs");
 
-// Ensure DB and Tables exist on startup (Critical for Render Ephemeral execution)
+const app = express();
+app.set('trust proxy', 1); // Trust first proxy (Render/Heroku/etc)
 const { seed } = require('./migrate');
 seed().catch(err => console.error("Migration failed:", err));
 

@@ -26,11 +26,15 @@ router.post('/register', async (req, res) => {
         );
         const user = { id: result.lastID, name: name || '', email, role: 'customer' };
 
+        // Generate dynamic link based on current request host (works for localhost and production)
+        const protocol = req.protocol;
+        const host = req.get('host');
+        const verificationLink = `${protocol}://${host}/api/auth/verify?token=${verificationToken}`;
+
         // Send verification email
-        await sendVerificationEmail(email, verificationToken);
+        await sendVerificationEmail(email, verificationLink);
 
         // For DEV/DEMO purposes: Return the link in the response
-        const verificationLink = `http://localhost:4000/api/auth/verify?token=${verificationToken}`;
         res.json({
             message: 'Registration successful. Please check your email to verify your account.',
             devLink: verificationLink

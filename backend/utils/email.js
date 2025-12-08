@@ -12,8 +12,8 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-async function sendVerificationEmail(email, token) {
-    const verificationLink = `http://localhost:4000/api/auth/verify?token=${token}`;
+async function sendVerificationEmail(email, verificationLink) {
+    // const verificationLink = ... (removed)
 
     const mailOptions = {
         from: '"Zë Luxury Fashion" <no-reply@zefashion.com>',
