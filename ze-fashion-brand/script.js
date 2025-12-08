@@ -62,11 +62,11 @@ document.querySelectorAll('button').forEach(button => {
     if (this.textContent.includes('Shop Collection') || this.textContent.includes('Add to Cart')) {
       message = 'Item added to your wishlist! This is a demo boutique.';
     } else if (this.textContent.includes('Subscribe')) {
-      message = 'Thank you for subscribing to NOIR updates!';
+      message = 'Thank you for subscribing to Zë updates!';
     } else if (this.textContent.includes('Explore') || this.textContent.includes('View')) {
       message = 'Opening collection... This is a demo experience.';
     } else if (this.textContent.includes('Learn More')) {
-      message = 'Discover more about NOIR\'s heritage and craftsmanship.';
+      message = "Discover more about Zë's heritage and craftsmanship.";
     }
 
     if (message) {
