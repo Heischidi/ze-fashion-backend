@@ -175,15 +175,17 @@ async function seed() {
   // db.close() isn't strictly necessary if process exits, but good practice
   // However, db wrapper might be singular. Backend runs persistently.
   // This script runs once.
-  await db.close();
+  // Do not close connection here, as this function is imported by server.js which needs the pool open.
   console.log("Migration & Seeding complete");
 }
 
 if (require.main === module) {
-  seed().catch((err) => {
-    console.error(err);
-    process.exit(1);
-  });
+  seed()
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error(err);
+      process.exit(1);
+    });
 }
 
 module.exports = { seed };
