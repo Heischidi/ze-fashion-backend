@@ -49,6 +49,13 @@ async function seed() {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );`);
 
+  // Ensure new_arrival column exists (for existing non-ephemeral DBs or failed migrations)
+  try {
+    await db.run("ALTER TABLE products ADD COLUMN new_arrival INTEGER DEFAULT 0");
+  } catch (e) {
+    // Ignore error if column already exists
+  }
+
   // 4. Product Reviews
   await db.exec(`CREATE TABLE IF NOT EXISTS product_reviews (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
