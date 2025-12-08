@@ -1,19 +1,44 @@
-const sqlite3 = require('sqlite3').verbose();
-const { open } = require('sqlite');
+const { Pool } = require('pg');
 
-const path = require('path');
-const DB_FILE = process.env.DATABASE_FILE || path.join(__dirname, 'db.sqlite');
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
 
-let dbInstance = null;
+// Helper to convert ? placeholders to $1, $2, etc.
+function formatSql(sql) {
+    let i = 1;
+    return sql.replace(/\?/g, () => `$${i++}`);
+}
+
+const db = {
+    get: async (sql, params = []) => {
+        const res = await pool.query(formatSql(sql), params);
+        return res.rows[0];
+    },
+    all: async (sql, params = []) => {
+        const res = await pool.query(formatSql(sql), params);
+        return res.rows;
+    },
+    run: async (sql, params = []) => {
+        const res = await pool.query(formatSql(sql), params);
+        return {
+            lastID: res.rows.length > 0 ? res.rows[0].id : null,
+            changes: res.rowCount
+        };
+    },
+    exec: async (sql) => {
+        await pool.query(sql);
+    },
+    close: async () => {
+        await pool.end();
+    }
+};
 
 async function getDb() {
-    if (!dbInstance) {
-        dbInstance = await open({
-            filename: DB_FILE,
-            driver: sqlite3.Database
-        });
-    }
-    return dbInstance;
+    return db;
 }
 
 module.exports = { getDb };

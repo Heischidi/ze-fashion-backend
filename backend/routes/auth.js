@@ -21,7 +21,7 @@ router.post('/register', async (req, res) => {
     try {
         const db = await getDb();
         const result = await db.run(
-            'INSERT INTO users (name, email, password_hash, is_verified, verification_token) VALUES (?,?,?,?,?)',
+            'INSERT INTO users (name, email, password_hash, is_verified, verification_token) VALUES (?,?,?,?,?) RETURNING id',
             [name || '', email, hashed, 0, verificationToken]
         );
         const user = { id: result.lastID, name: name || '', email, role: 'customer' };
@@ -36,7 +36,7 @@ router.post('/register', async (req, res) => {
             devLink: verificationLink
         });
     } catch (e) {
-        if (e.message.includes('UNIQUE constraint failed')) {
+        if (e.code === '23505' || e.message.includes('duplicate key value')) {
             return res.status(400).json({ error: 'Email already registered' });
         }
         console.error(e);

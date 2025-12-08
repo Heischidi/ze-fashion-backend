@@ -26,7 +26,7 @@ router.post('/', authMiddleware, async (req, res) => {
     try {
         const db = await getDb();
         await db.run(
-            'INSERT INTO orders (user_id, items, total, shipping_address, status, is_gift, gift_message, recipient_email) VALUES (?,?,?,?,?,?,?,?)',
+            'INSERT INTO orders (user_id, items, total, shipping_address, status, is_gift, gift_message, recipient_email) VALUES (?,?,?,?,?,?,?,?) RETURNING id',
             [req.user.id, JSON.stringify(items), total, JSON.stringify(shipping_address), 'pending', is_gift ? 1 : 0, gift_message || null, recipient_email || null]
         );
         // Clear cart

@@ -1,99 +1,102 @@
 // backend/migrate.js
 require("dotenv").config();
-const sqlite3 = require("sqlite3").verbose();
-const { open } = require("sqlite");
-const bcrypt = require("bcryptjs");
-const path = require("path");
+const { getDb } = require("./db");
 const fs = require("fs");
+const path = require("path");
+const bcrypt = require("bcryptjs");
 
-const DB_FILE = process.env.DATABASE_FILE || "./db.sqlite";
 const FRONTEND_DIR = path.join(__dirname, "..", "ze-fashion-brand");
 const IMAGES_DIR = path.join(FRONTEND_DIR, "images");
 
 async function seed() {
-  const db = await open({ filename: DB_FILE, driver: sqlite3.Database });
+  const db = await getDb();
+
+  console.log("Starting migration to PostgreSQL...");
 
   // 1. Users
   await db.exec(`CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT UNIQUE,
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE,
     password_hash TEXT,
     name TEXT,
     google_id TEXT,
-    role TEXT DEFAULT 'customer',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    is_verified INTEGER DEFAULT 0,
+    verification_token TEXT,
+    role VARCHAR(50) DEFAULT 'customer',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );`);
 
   // 2. Categories
   await db.exec(`CREATE TABLE IF NOT EXISTS categories (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    slug TEXT UNIQUE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    slug VARCHAR(255) UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );`);
 
   // 3. Products
   await db.exec(`CREATE TABLE IF NOT EXISTS products (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT,
-    slug TEXT UNIQUE,
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255),
+    slug VARCHAR(255) UNIQUE,
     description TEXT,
-    price REAL,
-    compare_at_price REAL DEFAULT NULL,
+    price DECIMAL(10, 2),
+    compare_at_price DECIMAL(10, 2) DEFAULT NULL,
     category_id INTEGER,
     images TEXT, 
     variants TEXT,
     stock INTEGER DEFAULT 0,
     bestseller INTEGER DEFAULT 0,
     new_arrival INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );`);
-
-  // Ensure new_arrival column exists (for existing non-ephemeral DBs or failed migrations)
-  try {
-    await db.run("ALTER TABLE products ADD COLUMN new_arrival INTEGER DEFAULT 0");
-  } catch (e) {
-    // Ignore error if column already exists
-  }
 
   // 4. Product Reviews
   await db.exec(`CREATE TABLE IF NOT EXISTS product_reviews (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     product_id INTEGER,
     user_id INTEGER,
     rating INTEGER,
     title TEXT,
     body TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );`);
 
   // 5. Carts
   await db.exec(`CREATE TABLE IF NOT EXISTS carts (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     user_id INTEGER,
     items TEXT,
-    updated_at DATETIME
+    updated_at TIMESTAMP
   );`);
 
   // 6. Orders
   await db.exec(`CREATE TABLE IF NOT EXISTS orders (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     user_id INTEGER,
     items TEXT,
-    total REAL,
+    total DECIMAL(10, 2),
     shipping_address TEXT,
-    status TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    status VARCHAR(50),
+    is_gift INTEGER DEFAULT 0,
+    gift_message TEXT,
+    recipient_email TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );`);
+
+  console.log("Tables created.");
 
   // --- Seed Admin ---
   const adminEmail = process.env.ADMIN_EMAIL || "admin@noir123.com";
   const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+  // Note: Postgres uses $1, but our wrapper expects ? for consistent external API usually,
+  // BUT here we are using db.get/run which use the wrapper that transforms ?.
+  // Checking if admin exists
   const existingAdmin = await db.get("SELECT id FROM users WHERE email = ?", [adminEmail]);
   if (!existingAdmin) {
     const hashed = bcrypt.hashSync(adminPassword, 10);
     await db.run(
-      "INSERT INTO users (name, email, password_hash, role) VALUES (?,?,?,?)",
+      "INSERT INTO users (name, email, password_hash, role, is_verified) VALUES (?,?,?,?, 1)",
       ["Admin User", adminEmail, hashed, "admin"]
     );
     console.log("Admin user created:", adminEmail);
@@ -122,7 +125,9 @@ async function seed() {
 
   // --- Seed Products (if empty) ---
   const countRow = await db.get("SELECT COUNT(*) as c FROM products");
-  if (countRow.c === 0) {
+  // For postgres, count(*) returns a string/bigint, need to parse. 
+  // Wrapper returns rows[0], so rows[0].c
+  if (parseInt(countRow.c) === 0) {
     console.log("Seeding products from images...");
     let images = [];
     try {
@@ -134,13 +139,11 @@ async function seed() {
     for (let i = 0; i < images.length; i++) {
       const img = images[i];
       const title = img.replace(/[-_]/g, " ").replace(/\.(png|jpe?g|webp|gif)$/i, "").trim();
-      const price = (Math.floor(Math.random() * 50) + 20) * 1000; // 20k - 70k
+      const price = (Math.floor(Math.random() * 50) + 20) * 1000;
       const comparePrice = Math.random() > 0.7 ? price * 1.2 : null;
       const cat = cats[Math.floor(Math.random() * cats.length)];
       const stock = Math.floor(Math.random() * 50) + 5;
       const bestseller = Math.random() > 0.8 ? 1 : 0;
-
-      // Mock variants
       const variants = JSON.stringify([
         { size: "S", color: "Black", stock: 10 },
         { size: "M", color: "Black", stock: 10 },
@@ -158,7 +161,7 @@ async function seed() {
           price,
           comparePrice,
           cat.id,
-          JSON.stringify([img]), // Array of images
+          JSON.stringify([`https://ze-fashion-backend.onrender.com/images/${img}`]), // Use absolute path simulation or relative
           variants,
           stock,
           bestseller
@@ -170,6 +173,9 @@ async function seed() {
     console.log("Products already exist, skipping seed");
   }
 
+  // db.close() isn't strictly necessary if process exits, but good practice
+  // However, db wrapper might be singular. Backend runs persistently.
+  // This script runs once.
   await db.close();
   console.log("Migration & Seeding complete");
 }

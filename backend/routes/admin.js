@@ -54,7 +54,7 @@ router.post('/products', adminMiddleware, upload.array('images'), async (req, re
         }
 
         await db.run(
-            'INSERT INTO products (title, slug, description, price, category_id, images, bestseller, new_arrival, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)',
+            'INSERT INTO products (title, slug, description, price, category_id, images, bestseller, new_arrival, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP) RETURNING id',
             [title, slug, description, price, categoryId, JSON.stringify(images), bestseller === 'true' || bestseller === true ? 1 : 0, new_arrival === 'true' || new_arrival === true ? 1 : 0]
         );
 
