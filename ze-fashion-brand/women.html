@@ -63,7 +63,8 @@
                     <a href="signin.html" class="hidden md:block hover:scale-110 transition-transform" title="Sign In">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                            </path>
                         </svg>
                     </a>
                     <button id="mobileMenuBtn" class="md:hidden">
@@ -117,7 +118,8 @@
                 <a href="cart.html"
                     class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Cart</a>
                 <a href="signin.html"
-                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Sign In</a>
+                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Sign
+                    In</a>
             </div>
         </div>
     </div>
@@ -126,7 +128,8 @@
     <section class="pt-32 pb-16 px-6 bg-black text-white">
         <div class="max-w-7xl mx-auto text-center">
             <h1 class="text-5xl md:text-7xl font-serif font-light mb-6 fade-in">Women</h1>
-            <p class="text-xl text-gray-400 max-w-2xl mx-auto fade-in stagger-1">Elegance and grace for every occasion.
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto fade-in stagger-1">Elegance and grace for
+                every occasion.
             </p>
         </div>
     </section>
@@ -144,183 +147,26 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Products loaded via JS -->
             </div>
-            <!DOCTYPE html>
-            <html lang="en">
+        </div>
+    </section>
 
-            <head>
-                <meta charset="UTF-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>Women's Collection - Zë Luxury Fashion</title>
-                <script src="https://cdn.tailwindcss.com"></script>
-                <link rel="stylesheet" href="style.css" />
-            </head>
-
-            <body class="font-sans bg-black text-white">
-                <!-- Navigation -->
-                <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
-                    <div class="max-w-7xl mx-auto px-6 py-4">
-                        <div class="flex justify-between items-center">
-                            <a href="index.html" class="text-3xl font-serif font-bold tracking-wider text-white">Zë</a>
-                            <div class="hidden md:flex space-x-8">
-                                <a href="index.html"
-                                    class="nav-link text-gray-300 hover:text-white font-medium">Home</a>
-                                <a href="men.html" class="nav-link text-gray-300 hover:text-white font-medium">Men</a>
-                                <a href="women.html" class="nav-link text-white font-medium">Women</a>
-                                <a href="kids.html" class="nav-link text-gray-300 hover:text-white font-medium">Kids</a>
-                                <div class="relative group">
-                                    <a href="collections.html"
-                                        class="nav-link text-gray-300 hover:text-white font-medium flex items-center">
-                                        Collections
-                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </a>
-                                    <div
-                                        class="absolute left-0 mt-2 w-48 bg-zinc-900 border border-zinc-800 rounded shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
-                                        <a href="collections.html?category=wardrobe"
-                                            class="block px-4 py-3 text-sm text-gray-300 hover:bg-zinc-800 hover:text-white">Wardrobe</a>
-                                        <a href="collections.html?category=curations"
-                                            class="block px-4 py-3 text-sm text-gray-300 hover:bg-zinc-800 hover:text-white">Curations</a>
-                                        <a href="collections.html?category=accents"
-                                            class="block px-4 py-3 text-sm text-gray-300 hover:bg-zinc-800 hover:text-white">Accents</a>
-                                    </div>
-                                </div>
-                                <a href="about.html"
-                                    class="nav-link text-gray-300 hover:text-white font-medium">About</a>
-                                <a href="lookbook.html"
-                                    class="nav-link text-gray-300 hover:text-white font-medium">Lookbook</a>
-                                <a href="contact.html"
-                                    class="nav-link text-gray-300 hover:text-white font-medium">Contact</a>
-                            </div>
-                            <div class="flex items-center space-x-4 text-white">
-                                <a href="search.html" class="hidden md:block hover:scale-110 transition-transform"
-                                    title="Search">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                    </svg>
-                                </a>
-                                <a href="cart.html"
-                                    class="hidden md:block hover:scale-110 transition-transform relative"
-                                    title="View Cart">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8m-8 0a2 2 0 100 4 2 2 0 000-4zm8 0a2 2 0 100 4 2 2 0 000-4z">
-                                        </path>
-                                    </svg>
-                                    <span
-                                        class="cart-count hidden absolute -top-1 -right-1 bg-yellow-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0</span>
-                                </a>
-                                <a href="signin.html" class="hidden md:block hover:scale-110 transition-transform"
-                                    title="Sign In">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                                        </path>
-                                    </svg>
-                                </a>
-                                <button id="mobileMenuBtn" class="md:hidden">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 6h16M4 12h16M4 18h16"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-
-                <!-- Mobile Menu -->
-                <div id="mobileMenu"
-                    class="mobile-menu fixed top-0 right-0 h-full w-80 shadow-2xl md:hidden z-50 bg-zinc-900 border-l border-zinc-800">
-                    <div class="p-6">
-                        <button id="closeMenu" class="float-right text-gray-400 hover:text-white">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12">
-                                </path>
-                            </svg>
-                        </button>
-                        <div class="mt-16 space-y-8">
-                            <a href="index.html"
-                                class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Home</a>
-                            <a href="men.html"
-                                class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Men</a>
-                            <a href="women.html"
-                                class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors font-bold">Women</a>
-                            <a href="kids.html"
-                                class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Kids</a>
-                            <div class="space-y-4">
-                                <a href="collections.html"
-                                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Collections</a>
-                                <div class="pl-4 space-y-4 border-l border-zinc-800">
-                                    <a href="collections.html?category=wardrobe"
-                                        class="block text-lg text-gray-400 hover:text-white">Wardrobe</a>
-                                    <a href="collections.html?category=curations"
-                                        class="block text-lg text-gray-400 hover:text-white">Curations</a>
-                                    <a href="collections.html?category=accents"
-                                        class="block text-lg text-gray-400 hover:text-white">Accents</a>
-                                </div>
-                            </div>
-                            <a href="about.html"
-                                class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">About</a>
-                            <a href="lookbook.html"
-                                class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Lookbook</a>
-                            <a href="contact.html"
-                                class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Contact</a>
-                            <a href="cart.html"
-                                class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Cart</a>
-                            <a href="signin.html"
-                                class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Sign
-                                In</a>
-                        </div>
-                    </div>
+    <!-- Footer -->
+    <footer class="bg-black text-white py-16 px-6 border-t border-zinc-800">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-12">
+                <div>
+                    <div class="text-3xl font-serif font-bold mb-6 tracking-wider">Zë</div>
+                    <p class="leading-relaxed text-gray-400">Timeless elegance meets contemporary design in
+                        every piece we create.</p>
                 </div>
+            </div>
+            <div class="border-t border-zinc-800 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 Zë Luxury Fashion. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
-                <!-- Hero Section -->
-                <section class="pt-32 pb-16 px-6 bg-black text-white">
-                    <div class="max-w-7xl mx-auto text-center">
-                        <h1 class="text-5xl md:text-7xl font-serif font-light mb-6 fade-in">Women</h1>
-                        <p class="text-xl text-gray-400 max-w-2xl mx-auto fade-in stagger-1">Elegance and grace for
-                            every occasion.
-                        </p>
-                    </div>
-                </section>
+    <script src="script.js"></script>
+</body>
 
-                <!-- Category Cards (Hidden for specific category pages via JS, but good to have structure) -->
-                <section id="categoryCards" class="py-10 px-6 bg-black hidden">
-                    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
-                        <!-- ... -->
-                    </div>
-                </section>
-
-                <!-- Products Grid -->
-                <section class="py-20 px-6 bg-black">
-                    <div class="max-w-7xl mx-auto">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <!-- Products loaded via JS -->
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Footer -->
-                <footer class="bg-black text-white py-16 px-6 border-t border-zinc-800">
-                    <div class="max-w-6xl mx-auto">
-                        <div class="mb-12">
-                            <div>
-                                <div class="text-3xl font-serif font-bold mb-6 tracking-wider">Zë</div>
-                                <p class="leading-relaxed text-gray-400">Timeless elegance meets contemporary design in
-                                    every piece we create.</p>
-                            </div>
-                        </div>
-                        <div class="border-t border-zinc-800 pt-8 text-center text-gray-500">
-                            <p>&copy; 2025 Zë Luxury Fashion. All rights reserved.</p>
-                        </div>
-                    </div>
-                </footer>
-
-                <script src="script.js"></script>
-            </body>
-
-            </html>
+</html>
