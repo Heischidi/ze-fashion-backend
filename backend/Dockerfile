@@ -3,6 +3,5 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 COPY . .
-RUN npm run migrate
 EXPOSE 4000
-CMD ["npm", "start"]
+CMD ["sh", "-c", "node migrate.js && node server.js"]
