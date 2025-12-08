@@ -5,6 +5,10 @@ const path = require("path");
 const cors = require("cors");
 const fs = require("fs");
 
+// Ensure DB and Tables exist on startup (Critical for Render Ephemeral execution)
+const { seed } = require('./migrate');
+seed().catch(err => console.error("Migration failed:", err));
+
 const PORT = process.env.PORT || 4000;
 const FRONTEND_DIR = path.join(__dirname, "..", "ze-fashion-brand");
 const IMAGES_DIR = path.join(FRONTEND_DIR, "images");
