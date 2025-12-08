@@ -10,8 +10,7 @@ const { seed } = require('./migrate');
 seed().catch(err => console.error("Migration failed:", err));
 
 const PORT = process.env.PORT || 4000;
-const FRONTEND_DIR = path.join(__dirname, "..", "ze-fashion-brand");
-const IMAGES_DIR = path.join(FRONTEND_DIR, "images");
+const IMAGES_DIR = path.join(__dirname, "images");
 
 const app = express();
 const session = require('express-session');

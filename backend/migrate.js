@@ -5,8 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const bcrypt = require("bcryptjs");
 
-const FRONTEND_DIR = path.join(__dirname, "..", "ze-fashion-brand");
-const IMAGES_DIR = path.join(FRONTEND_DIR, "images");
+const IMAGES_DIR = path.join(__dirname, "images");
 
 async function seed() {
   const db = await getDb();
