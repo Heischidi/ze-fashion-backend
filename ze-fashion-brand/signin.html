@@ -37,50 +37,9 @@
 </nav>
 
 <!-- Mobile Menu -->
-<div id="mobileMenu"
-  class="mobile-menu fixed top-0 right-0 h-full w-80 shadow-2xl md:hidden z-50 bg-zinc-900 border-l border-zinc-800">
-  <div class="p-6">
-    <!DOCTYPE html>
-    <html lang="en">
-
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Sign In - Zë Luxury Fashion</title>
-      <link rel="stylesheet" href="style.css">
-      <script src="https://cdn.tailwindcss.com"></script>
-    </head>
-
-    </svg>
-    </a>
-    <a href="cart.html" class="hidden md:block hover:scale-110 transition-transform relative" title="View Cart">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8m-8 0a2 2 0 100 4 2 2 0 000-4zm8 0a2 2 0 100 4 2 2 0 000-4z">
-        </path>
-      </svg>
-      <span
-        class="cart-count hidden absolute -top-1 -right-1 bg-yellow-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0</span>
-    </a>
-    <a href="signin.html" class="hidden md:block hover:scale-110 transition-transform text-yellow-500" title="Sign In">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-      </svg>
-    </a>
-    <button id="mobileMenuBtn" class="md:hidden">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-      </svg>
-    </button>
-  </div>
-</div>
-</div>
-</nav>
-
 <!-- Mobile Menu -->
 <div id="mobileMenu"
-  class="mobile-menu fixed top-0 right-0 h-full w-80 shadow-2xl md:hidden z-50 bg-zinc-900 border-l border-zinc-800">
+  class="mobile-menu fixed top-0 right-0 h-full w-80 shadow-2xl md:hidden z-50 bg-zinc-900 border-l border-zinc-800 hidden">
   <div class="p-6">
     <button id="closeMenu" class="float-right text-gray-400 hover:text-white">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,8 +51,17 @@
       <a href="men.html" class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Men</a>
       <a href="women.html"
         class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Women</a>
-      <a href="kids.html" <a href="collections.html"
-        class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Collections</a>
+      <a href="kids.html" class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Kids</a>
+      <div class="space-y-4">
+        <a href="collections.html"
+          class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Collections</a>
+        <div class="pl-4 space-y-4 border-l border-zinc-800">
+          <a href="collections.html?category=wardrobe" class="block text-lg text-gray-400 hover:text-white">Wardrobe</a>
+          <a href="collections.html?category=curations"
+            class="block text-lg text-gray-400 hover:text-white">Curations</a>
+          <a href="collections.html?category=accents" class="block text-lg text-gray-400 hover:text-white">Accents</a>
+        </div>
+      </div>
       <a href="about.html"
         class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">About</a>
       <a href="lookbook.html"
