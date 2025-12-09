@@ -468,18 +468,37 @@ if (window.location.pathname.match(/(collections|men|women|kids)\.html/)) {
 
         if (data.devLink) {
           console.log('Verification Link:', data.devLink);
-          // Optional: Show in a prompt for easy copying in demo
-          setTimeout(() => {
-            prompt("Backup Verification Link (Use if email doesn't arrive):", data.devLink);
-          }, 1000);
-        }
+          // Show link directly in UI for reliability
+          const linkContainer = document.createElement('div');
+          linkContainer.className = 'mt-4 p-4 bg-zinc-800 rounded border border-yellow-500/30 text-center';
+          linkContainer.innerHTML = `
+            <p class="text-white mb-2">Verification Link (Demo Mode):</p>
+            <a href="${data.devLink}" target="_blank" class="block w-full break-all text-yellow-500 hover:text-white underline p-2 bg-black/50 rounded text-sm">
+              Click to Verify
+            </a>
+            <p class="text-xs text-gray-400 mt-2">Open this link to verify your account.</p>
+          `;
 
-        // Switch to sign in view
-        const signInContainer = document.getElementById('signInContainer');
-        const signUpContainer = document.getElementById('signUpContainer');
-        if (signInContainer && signUpContainer) {
-          signUpContainer.classList.add('hidden');
-          signInContainer.classList.remove('hidden');
+          // Clear form and show message
+          signUpForm.innerHTML = '';
+          signUpForm.appendChild(linkContainer);
+
+          // Add a "Back to Sign In" button
+          const backBtn = document.createElement('button');
+          backBtn.className = 'mt-4 w-full text-center text-gray-400 hover:text-white text-sm underline';
+          backBtn.textContent = 'Back to Sign In';
+          backBtn.onclick = () => {
+            location.reload();
+          };
+          signUpForm.appendChild(backBtn);
+        } else {
+          // Normal flow (with working email)
+          const signInContainer = document.getElementById('signInContainer');
+          const signUpContainer = document.getElementById('signUpContainer');
+          if (signInContainer && signUpContainer) {
+            signUpContainer.classList.add('hidden');
+            signInContainer.classList.remove('hidden');
+          }
         }
 
       } catch (err) { console.error(err); showToast('Sign up error'); }
