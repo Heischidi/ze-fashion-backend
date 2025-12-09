@@ -114,11 +114,28 @@
         }
     }
 
-    function renderProducts() {
+    // Search Functionality
+    const searchInput = document.getElementById('productSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            renderProducts(e.target.value);
+        });
+    }
+
+    function renderProducts(searchQuery = '') {
         const tbody = document.getElementById('productsTableBody');
         if (!tbody) return;
 
-        tbody.innerHTML = products.map(p => {
+        let displayProducts = products;
+        if (searchQuery) {
+            const lowerQ = searchQuery.toLowerCase();
+            displayProducts = products.filter(p =>
+                p.title.toLowerCase().includes(lowerQ) ||
+                (p.category && p.category.toLowerCase().includes(lowerQ))
+            );
+        }
+
+        tbody.innerHTML = displayProducts.map(p => {
             const img = p.images && p.images.length > 0 ? p.images[0] : (p.image || 'images/placeholder.png');
             // Use the map to find the category name, fallback to 'Uncategorized' if ID not found
             const categoryName = categoryMap[p.category_id] || p.category || 'Uncategorized';
