@@ -2,12 +2,29 @@ const express = require('express');
 const router = express.Router();
 const { getDb } = require('../db');
 const jwt = require('jsonwebtoken');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key_for_ze_fashion_brand_2024_production_ready';
-const IMAGES_DIR = path.join(__dirname, '..', 'images');
+
+// Cloudinary Config
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'ze-fashion',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+        public_id: (req, file) => uuidv4(),
+    },
+});
 
 const adminMiddleware = (req, res, next) => {
     const header = req.headers.authorization;
@@ -23,25 +40,14 @@ const adminMiddleware = (req, res, next) => {
     }
 };
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, IMAGES_DIR);
-    },
-    filename: function (req, file, cb) {
-        const ext = path.extname(file.originalname);
-        cb(null, uuidv4() + ext);
-    }
-});
-
 const upload = multer({ storage: storage });
 
 // Create Product
 router.post('/products', adminMiddleware, upload.array('images'), async (req, res) => {
     try {
         const { title, description, price, category, bestseller, new_arrival } = req.body;
-        // Use dynamic URL for uploaded images
-        const BASE_URL = `${req.protocol}://${req.get('host')}`;
-        const images = req.files ? req.files.map(f => `${BASE_URL}/images/${f.filename}`) : [];
+        // Cloudinary returns the full URL in `file.path`
+        const images = req.files ? req.files.map(f => f.path) : [];
         const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
 
         const db = await getDb();
@@ -77,8 +83,8 @@ router.put('/products/:id', adminMiddleware, upload.array('images'), async (req,
         let finalImages = existing.images;
         // If new images are uploaded, replace old ones (basic logic for now)
         if (req.files && req.files.length > 0) {
-            const BASE_URL = `${req.protocol}://${req.get('host')}`;
-            const newImages = req.files.map(f => `${BASE_URL}/images/${f.filename}`);
+            // Cloudinary URL
+            const newImages = req.files.map(f => f.path);
             finalImages = JSON.stringify(newImages);
         }
 
