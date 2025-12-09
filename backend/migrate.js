@@ -50,6 +50,18 @@ async function seed() {
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );`);
 
+  // Update schema for existing tables (Idempotent for Postgres)
+  try {
+    await db.exec(`ALTER TABLE products ADD COLUMN IF NOT EXISTS new_arrival INTEGER DEFAULT 0;`);
+    await db.exec(`ALTER TABLE products ADD COLUMN IF NOT EXISTS bestseller INTEGER DEFAULT 0;`);
+    await db.exec(`ALTER TABLE products ADD COLUMN IF NOT EXISTS stock INTEGER DEFAULT 0;`);
+    await db.exec(`ALTER TABLE products ADD COLUMN IF NOT EXISTS variants TEXT;`);
+    await db.exec(`ALTER TABLE products ADD COLUMN IF NOT EXISTS compare_at_price DECIMAL(10, 2) DEFAULT NULL;`);
+    console.log("Schema updated (columns added if missing)");
+  } catch (e) {
+    console.log("Schema update skipped or not needed: " + e.message);
+  }
+
   // 4. Product Reviews
   await db.exec(`CREATE TABLE IF NOT EXISTS product_reviews (
     id SERIAL PRIMARY KEY,
