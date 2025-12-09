@@ -277,7 +277,8 @@
 
   <script src="script.js"></script>
   <script>
-    const API_BASE = window.location.origin;
+    // Use the global API_ROOT defined in script.js (or fallback to Render URL)
+    const API_BASE = window.API_ROOT || 'https://ze-fashion-backend.onrender.com';
     async function loadFeaturedProducts() {
       try {
         // Try to fetch new arrivals first
