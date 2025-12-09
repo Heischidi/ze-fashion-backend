@@ -7,8 +7,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key_for_ze_fashion_brand_2024_production_ready';
-const FRONTEND_DIR = path.join(__dirname, '..', '..', 'ze-fashion-brand');
-const IMAGES_DIR = path.join(FRONTEND_DIR, 'images');
+const IMAGES_DIR = path.join(__dirname, '..', 'images');
 
 const adminMiddleware = (req, res, next) => {
     const header = req.headers.authorization;
