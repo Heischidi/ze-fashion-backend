@@ -120,6 +120,18 @@ router.put('/products/:id', adminMiddleware, upload.array('images'), async (req,
     }
 });
 
+// Get All Users (Admin)
+router.get('/users', adminMiddleware, async (req, res) => {
+    try {
+        const db = await getDb();
+        const users = await db.all('SELECT id, name, email, role, is_verified, created_at FROM users ORDER BY created_at DESC');
+        res.json(users);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Failed to fetch users' });
+    }
+});
+
 // Get All Orders (Admin)
 router.get('/orders', adminMiddleware, async (req, res) => {
     try {

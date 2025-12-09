@@ -35,6 +35,9 @@
                     <a href="#"
                         class="block px-4 py-3 rounded-lg text-muted hover:bg-white/5 hover:text-white transition-colors"
                         id="navOrders">Orders</a>
+                    <a href="#"
+                        class="block px-4 py-3 rounded-lg text-muted hover:bg-white/5 hover:text-white transition-colors"
+                        id="navUsers">Users</a>
                     <a href="index.html"
                         class="block px-4 py-3 rounded-lg text-muted hover:bg-white/5 hover:text-white transition-colors mt-8 border-t border-white/10 pt-4">View
                         Store</a>
@@ -137,6 +140,30 @@
                             </thead>
                             <tbody id="ordersTableBody" class="divide-y divide-white/10 text-gray-300">
                                 <!-- Mock orders will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section (Hidden by default) -->
+            <div id="usersSection" class="hidden fade-in">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-3xl font-serif text-white">User Management</h1>
+                </div>
+                <div class="bg-white/5 rounded-xl border border-white/10 overflow-hidden backdrop-blur-sm">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-black/50 border-white/10">
+                                <tr>
+                                    <th class="px-6 py-4 font-serif text-gold">Name</th>
+                                    <th class="px-6 py-4 font-serif text-gold">Email</th>
+                                    <th class="px-6 py-4 font-serif text-gold">Role</th>
+                                    <th class="px-6 py-4 font-serif text-gold">Joined Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="divide-y divide-white/10 text-gray-300">
+                                <!-- Users will be populated here -->
                             </tbody>
                         </table>
                     </div>

@@ -33,28 +33,50 @@
     // Navigation
     const navProducts = document.getElementById('navProducts');
     const navOrders = document.getElementById('navOrders');
+    const navUsers = document.getElementById('navUsers');
     const productsSection = document.getElementById('productsSection');
     const ordersSection = document.getElementById('ordersSection');
+    const usersSection = document.getElementById('usersSection');
 
     navProducts.addEventListener('click', (e) => {
         e.preventDefault();
         productsSection.classList.remove('hidden');
         ordersSection.classList.add('hidden');
+        usersSection.classList.add('hidden');
         navProducts.classList.add('bg-black', 'text-white');
         navProducts.classList.remove('text-gray-600', 'hover:bg-gray-100');
         navOrders.classList.remove('bg-black', 'text-white');
         navOrders.classList.add('text-gray-600', 'hover:bg-gray-100');
+        navUsers.classList.remove('bg-black', 'text-white');
+        navUsers.classList.add('text-gray-600', 'hover:bg-gray-100');
     });
 
     navOrders.addEventListener('click', (e) => {
         e.preventDefault();
         productsSection.classList.add('hidden');
         ordersSection.classList.remove('hidden');
+        usersSection.classList.add('hidden');
         navOrders.classList.add('bg-black', 'text-white');
         navOrders.classList.remove('text-gray-600', 'hover:bg-gray-100');
         navProducts.classList.remove('bg-black', 'text-white');
         navProducts.classList.add('text-gray-600', 'hover:bg-gray-100');
+        navUsers.classList.remove('bg-black', 'text-white');
+        navUsers.classList.add('text-gray-600', 'hover:bg-gray-100');
         fetchOrders();
+    });
+
+    navUsers.addEventListener('click', (e) => {
+        e.preventDefault();
+        productsSection.classList.add('hidden');
+        ordersSection.classList.add('hidden');
+        usersSection.classList.remove('hidden');
+        navUsers.classList.add('bg-black', 'text-white');
+        navUsers.classList.remove('text-gray-600', 'hover:bg-gray-100');
+        navProducts.classList.remove('bg-black', 'text-white');
+        navProducts.classList.add('text-gray-600', 'hover:bg-gray-100');
+        navOrders.classList.remove('bg-black', 'text-white');
+        navOrders.classList.add('text-gray-600', 'hover:bg-gray-100');
+        fetchUsers();
     });
 
     // Product Management
