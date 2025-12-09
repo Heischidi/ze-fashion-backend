@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
         const db = await getDb();
         const result = await db.run(
             'INSERT INTO users (name, email, password_hash, is_verified, verification_token) VALUES (?,?,?,?,?) RETURNING id',
-            [name || '', email, hashed, 0, verificationToken]
+            [name || '', email, hashed, 1, verificationToken] // Auto-verify: is_verified = 1
         );
         const user = { id: result.lastID, name: name || '', email, role: 'customer' };
 
@@ -31,12 +31,12 @@ router.post('/register', async (req, res) => {
         const host = req.get('host');
         const verificationLink = `${protocol}://${host}/api/auth/verify?token=${verificationToken}`;
 
-        // Send verification email
-        await sendVerificationEmail(email, verificationLink);
+        // Send verification email (Optional now, but good to keep logic if SMTP is added later)
+        // await sendVerificationEmail(email, verificationLink); 
 
         // For DEV/DEMO purposes: Return the link in the response
         res.json({
-            message: 'Registration successful. Please check your email to verify your account.',
+            message: 'Registration successful.',
             devLink: verificationLink
         });
     } catch (e) {
@@ -61,10 +61,10 @@ router.post('/login', async (req, res) => {
         const valid = bcrypt.compareSync(password, user.password_hash);
         if (!valid) return res.status(400).json({ error: 'Invalid credentials' });
 
-        // Check verification status
-        if (user.is_verified === 0) {
-            return res.status(403).json({ error: 'Please verify your email address before logging in.' });
-        }
+        // Check verification status - DISABLED for now to allow login without SMTP
+        // if (user.is_verified === 0) {
+        //     return res.status(403).json({ error: 'Please verify your email address before logging in.' });
+        // }
 
         const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
         res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
