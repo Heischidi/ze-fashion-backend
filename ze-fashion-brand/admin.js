@@ -574,30 +574,28 @@
         modal.classList.add('flex');
     };
 
-};
-
-// User Management
-async function fetchUsers() {
-    try {
-        const res = await fetch(`${API_ROOT}/api/admin/users`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!res.ok) throw new Error('Failed to fetch users');
-        const users = await res.json();
-        renderUsers(users);
-    } catch (err) {
-        console.error('Error fetching users:', err);
-        showToast('Failed to load users');
+    // User Management
+    async function fetchUsers() {
+        try {
+            const res = await fetch(`${API_ROOT}/api/admin/users`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Failed to fetch users');
+            const users = await res.json();
+            renderUsers(users);
+        } catch (err) {
+            console.error('Error fetching users:', err);
+            showToast('Failed to load users');
+        }
     }
-}
 
-function renderUsers(users) {
-    const tbody = document.getElementById('usersTableBody');
-    if (!tbody) return;
+    function renderUsers(users) {
+        const tbody = document.getElementById('usersTableBody');
+        if (!tbody) return;
 
-    tbody.innerHTML = users.map(user => {
-        const date = new Date(user.created_at).toLocaleDateString();
-        return `
+        tbody.innerHTML = users.map(user => {
+            const date = new Date(user.created_at).toLocaleDateString();
+            return `
             <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                 <td class="px-6 py-4 font-medium text-white">${user.name || 'N/A'}</td>
                 <td class="px-6 py-4 text-gray-300">${user.email}</td>
@@ -605,7 +603,7 @@ function renderUsers(users) {
                 <td class="px-6 py-4 text-gray-400 text-sm">${date}</td>
             </tr>
         `;
-    }).join('');
-}
+        }).join('');
+    }
 
-}) ();
+})();
