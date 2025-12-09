@@ -171,10 +171,17 @@
                         <option value="accents">Accents</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-muted mb-1">Price (Naira (₦))</label>
-                    <input type="number" id="productPrice" required step="0.01" placeholder="e.g., 50000.00"
-                        class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-black/50 text-white focus:border-gold focus:outline-none transition-colors">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-muted mb-1">Price (Naira (₦))</label>
+                        <input type="number" id="productPrice" required step="0.01" placeholder="50000"
+                            class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-black/50 text-white focus:border-gold focus:outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-muted mb-1">Compare At (Optional)</label>
+                        <input type="number" id="productComparePrice" step="0.01" placeholder="60000"
+                            class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-black/50 text-white focus:border-gold focus:outline-none transition-colors">
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-muted mb-1">Product Image</label>

@@ -45,7 +45,7 @@ const upload = multer({ storage: storage });
 // Create Product
 router.post('/products', adminMiddleware, upload.array('images'), async (req, res) => {
     try {
-        const { title, description, price, category, bestseller, new_arrival } = req.body;
+        const { title, description, price, compare_at_price, category, bestseller, new_arrival } = req.body;
         // Cloudinary returns the full URL in `file.path`
         const images = req.files ? req.files.map(f => f.path) : [];
         const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
@@ -59,8 +59,8 @@ router.post('/products', adminMiddleware, upload.array('images'), async (req, re
         }
 
         await db.run(
-            'INSERT INTO products (title, slug, description, price, category_id, images, bestseller, new_arrival, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP) RETURNING id',
-            [title, slug, description, price, categoryId, JSON.stringify(images), bestseller === 'true' || bestseller === true ? 1 : 0, new_arrival === 'true' || new_arrival === true ? 1 : 0]
+            'INSERT INTO products (title, slug, description, price, compare_at_price, category_id, images, bestseller, new_arrival, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP) RETURNING id',
+            [title, slug, description, price, compare_at_price || null, categoryId, JSON.stringify(images), bestseller === 'true' || bestseller === true ? 1 : 0, new_arrival === 'true' || new_arrival === true ? 1 : 0]
         );
 
         res.json({ success: true });
@@ -73,7 +73,7 @@ router.post('/products', adminMiddleware, upload.array('images'), async (req, re
 // Update Product
 router.put('/products/:id', adminMiddleware, upload.array('images'), async (req, res) => {
     try {
-        const { title, description, price, category, bestseller, new_arrival } = req.body;
+        const { title, description, price, compare_at_price, category, bestseller, new_arrival } = req.body;
         const db = await getDb();
 
         // 1. Fetch existing product
@@ -98,12 +98,13 @@ router.put('/products/:id', adminMiddleware, upload.array('images'), async (req,
         // 3. Update
         await db.run(
             `UPDATE products 
-             SET title = ?, description = ?, price = ?, category_id = ?, images = ?, bestseller = ?, new_arrival = ?
+             SET title = ?, description = ?, price = ?, compare_at_price = ?, category_id = ?, images = ?, bestseller = ?, new_arrival = ?
              WHERE id = ?`,
             [
                 title,
                 description,
                 price,
+                compare_at_price || null,
                 categoryId,
                 finalImages,
                 bestseller === 'true' || bestseller === true ? 1 : 0,

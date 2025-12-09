@@ -262,6 +262,7 @@
             }
             document.getElementById('productCategory').value = categorySlug;
 
+            document.getElementById('productComparePrice').value = product.compare_at_price || '';
             document.getElementById('productPrice').value = product.price;
             document.getElementById('productDescription').value = product.description || '';
             document.getElementById('productNewArrival').checked = product.new_arrival === 1;
@@ -362,6 +363,7 @@
                 formData.append('title', document.getElementById('productName').value);
                 formData.append('category', document.getElementById('productCategory').value);
                 formData.append('price', document.getElementById('productPrice').value);
+                formData.append('compare_at_price', document.getElementById('productComparePrice').value);
                 formData.append('description', document.getElementById('productDescription').value || 'Premium fashion item');
                 formData.append('stock', '10'); // Default stock
                 formData.append('bestseller', 'false');
