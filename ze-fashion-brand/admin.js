@@ -595,15 +595,74 @@
 
         tbody.innerHTML = users.map(user => {
             const date = new Date(user.created_at).toLocaleDateString();
+            const isSelf = user.id === parseInt(JSON.parse(sessionStorage.getItem('ze_user') || '{}').id);
+
             return `
             <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                 <td class="px-6 py-4 font-medium text-white">${user.name || 'N/A'}</td>
                 <td class="px-6 py-4 text-gray-300">${user.email}</td>
-                <td class="px-6 py-4 text-gray-300 capitalize">${user.role}</td>
+                <td class="px-6 py-4">
+                    <select onchange="updateUserRole(${user.id}, this.value)" ${isSelf ? 'disabled' : ''}
+                        class="bg-black/50 border border-gray-700 text-sm rounded px-3 py-1 text-white focus:border-gold focus:outline-none">
+                        <option value="customer" ${user.role === 'customer' ? 'selected' : ''}>Customer</option>
+                        <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                    </select>
+                </td>
                 <td class="px-6 py-4 text-gray-400 text-sm">${date}</td>
+                <td class="px-6 py-4">
+                    <button onclick="deleteUser(${user.id})" ${isSelf ? 'disabled' : ''} 
+                        class="text-red-400 hover:text-red-300 transition-colors text-sm font-medium ${isSelf ? 'opacity-50 cursor-not-allowed' : ''}">
+                        Delete
+                    </button>
+                </td>
             </tr>
         `;
         }).join('');
     }
+
+    window.updateUserRole = async function (id, newRole) {
+        try {
+            const res = await fetch(`${API_ROOT}/api/admin/users/${id}/role`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ role: newRole })
+            });
+
+            if (res.ok) {
+                showToast('User role updated');
+            } else {
+                showToast('Failed to update role');
+                fetchUsers(); // Revert UI
+            }
+        } catch (e) {
+            console.error(e);
+            showToast('Error updating role');
+            fetchUsers();
+        }
+    };
+
+    window.deleteUser = async function (id) {
+        if (!confirm('Are you sure you want to delete this user? This cannot be undone.')) return;
+
+        try {
+            const res = await fetch(`${API_ROOT}/api/admin/users/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                showToast('User deleted successfully');
+                fetchUsers();
+            } else {
+                showToast('Failed to delete user');
+            }
+        } catch (e) {
+            console.error(e);
+            showToast('Error deleting user');
+        }
+    };
 
 })();

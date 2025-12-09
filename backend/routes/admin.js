@@ -132,6 +132,34 @@ router.get('/users', adminMiddleware, async (req, res) => {
     }
 });
 
+// Update User Role
+router.put('/users/:id/role', adminMiddleware, async (req, res) => {
+    const { role } = req.body;
+    if (!['admin', 'customer'].includes(role)) {
+        return res.status(400).json({ error: 'Invalid role' });
+    }
+    try {
+        const db = await getDb();
+        await db.run('UPDATE users SET role = ? WHERE id = ?', [role, req.params.id]);
+        res.json({ success: true });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Failed to update user role' });
+    }
+});
+
+// Delete User
+router.delete('/users/:id', adminMiddleware, async (req, res) => {
+    try {
+        const db = await getDb();
+        await db.run('DELETE FROM users WHERE id = ?', [req.params.id]);
+        res.json({ success: true });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Failed to delete user' });
+    }
+});
+
 // Get All Orders (Admin)
 router.get('/orders', adminMiddleware, async (req, res) => {
     try {
