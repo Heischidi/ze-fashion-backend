@@ -290,5 +290,14 @@ footer h4 {
 
 /* Mobile Scroll Lock */
 .no-scroll {
-  overflow: hidden;
+  overflow: hidden !important;
+  height: 100vh;
+  position: fixed;
+  width: 100%;
+}
+
+.mobile-menu {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }

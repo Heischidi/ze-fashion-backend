@@ -80,18 +80,48 @@
 
     <!-- Mobile Menu -->
     <div id="mobileMenu"
-        class="mobile-menu fixed top-0 right-0 h-full w-80 shadow-2xl md:hidden z-50 bg-zinc-900 border-l border-zinc-800">
+        class="mobile-menu fixed top-0 right-0 h-full w-80 shadow-2xl md:hidden z-50 bg-zinc-900 border-l border-zinc-800 hidden">
         <div class="p-6">
             <button id="closeMenu" class="float-right text-gray-400 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+            <div class="mt-16 space-y-8">
+                <a href="index.html"
+                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Home</a>
+                <a href="men.html"
+                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Men</a>
+                <a href="women.html"
+                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Women</a>
+                <a href="kids.html"
+                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Kids</a>
+                <div class="space-y-4">
+                    <a href="collections.html"
+                        class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Collections</a>
+                    <div class="pl-4 space-y-4 border-l border-zinc-800">
+                        <a href="collections.html?category=wardrobe"
+                            class="block text-lg text-gray-400 hover:text-white">Wardrobe</a>
+                        <a href="collections.html?category=curations"
+                            class="block text-lg text-gray-400 hover:text-white">Curations</a>
+                        <a href="collections.html?category=accents"
+                            class="block text-lg text-gray-400 hover:text-white">Accents</a>
+                    </div>
+                </div>
+                <a href="about.html"
+                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">About</a>
+                <a href="lookbook.html"
+                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Lookbook</a>
                 <a href="contact.html"
-                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors font-bold">Contact</a>
+                    class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Contact</a>
                 <a href="cart.html"
                     class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Cart</a>
                 <a href="signin.html"
                     class="block text-2xl font-serif text-white hover:text-yellow-500 transition-colors">Sign
                     In</a>
+            </div>
         </div>
-    </div>
     </div>
 
     <!-- Hero Section -->
