@@ -21,15 +21,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileMenu = document.getElementById('mobileMenu');
   const closeMenu = document.getElementById('closeMenu');
 
+  function toggleMenu() {
+    mobileMenu.classList.toggle('hidden');
+    document.body.classList.toggle('no-scroll');
+  }
+
+  function closeMobileMenu() {
+    mobileMenu.classList.add('hidden');
+    document.body.classList.remove('no-scroll');
+  }
+
   if (mobileMenuBtn && mobileMenu) {
-    mobileMenuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
+    mobileMenuBtn.addEventListener('click', toggleMenu);
   }
 
   if (closeMenu && mobileMenu) {
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
+    closeMenu.addEventListener('click', closeMobileMenu);
+  }
+
+  // Close menu when clicking any link
+  if (mobileMenu) {
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
     });
   }
 });

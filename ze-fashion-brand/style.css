@@ -287,3 +287,8 @@ footer h4 {
 .feature-product-card:hover {
   transform: scale(1.05);
 }
+
+/* Mobile Scroll Lock */
+.no-scroll {
+  overflow: hidden;
+}
