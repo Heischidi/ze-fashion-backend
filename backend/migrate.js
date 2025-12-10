@@ -95,6 +95,15 @@ async function seed() {
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );`);
 
+  // 7. Indexes
+  try {
+    await db.exec(`CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);`);
+    await db.exec(`CREATE INDEX IF NOT EXISTS idx_orders_recipient_email ON orders(recipient_email);`);
+    console.log("Indexes checked/created");
+  } catch (e) {
+    console.log("Index creation skipped: " + e.message);
+  }
+
   console.log("Tables created.");
 
   // --- Seed Admin ---
