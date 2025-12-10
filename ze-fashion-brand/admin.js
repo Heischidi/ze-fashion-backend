@@ -665,4 +665,63 @@
         }
     };
 
+    // Mobile Menu Logic
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const mobileNavProducts = document.getElementById('mobileNavProducts');
+    const mobileNavOrders = document.getElementById('mobileNavOrders');
+    const mobileNavUsers = document.getElementById('mobileNavUsers');
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+    function toggleMobileMenu() {
+        if (mobileMenu.classList.contains('translate-x-full')) {
+            mobileMenu.classList.remove('translate-x-full');
+            document.body.style.overflow = 'hidden'; // Lock scroll
+        } else {
+            mobileMenu.classList.add('translate-x-full');
+            document.body.style.overflow = ''; // Unlock scroll
+        }
+    }
+
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+    }
+    if (closeMenuBtn) {
+        closeMenuBtn.addEventListener('click', toggleMobileMenu);
+    }
+
+    // Mobile Navigation Handlers
+    // Reuse the click handlers from desktop but trigger them
+    if (mobileNavProducts) {
+        mobileNavProducts.addEventListener('click', (e) => {
+            e.preventDefault();
+            navProducts.click(); // Trigger desktop handler logic
+            toggleMobileMenu();
+        });
+    }
+
+    if (mobileNavOrders) {
+        mobileNavOrders.addEventListener('click', (e) => {
+            e.preventDefault();
+            navOrders.click(); // Trigger desktop handler logic
+            toggleMobileMenu();
+        });
+    }
+
+    if (mobileNavUsers) {
+        mobileNavUsers.addEventListener('click', (e) => {
+            e.preventDefault();
+            navUsers.click(); // Trigger desktop handler logic
+            toggleMobileMenu();
+        });
+    }
+
+    if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutBtn.click(); // Trigger desktop logout logic
+        });
+    }
+
 })();
