@@ -578,8 +578,11 @@ if (window.location.pathname.match(/(collections|men|women|kids)\.html/)) {
       // Show mobile logout button
       const mobileSignOutBtn = document.getElementById('mobileSignOutBtn');
       if (mobileSignOutBtn) {
+        console.log('Mobile Sign Out button found, showing it.');
         mobileSignOutBtn.classList.remove('hidden');
         mobileSignOutBtn.classList.add('signout'); // Add this class to trigger the global click listener
+      } else {
+        console.warn('Mobile Sign Out button NOT found.');
       }
 
     } catch (e) { console.error('User menu setup error:', e); }

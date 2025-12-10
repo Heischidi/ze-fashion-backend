@@ -100,6 +100,9 @@
                 <button id="mobileSignOutBtn"
                     class="block text-2xl font-serif text-red-500 hover:text-red-400 transition-colors text-left w-full hidden">Sign
                     Out</button>
+                <a href="index.html"
+                    class="block text-2xl font-serif text-gray-400 hover:text-white transition-colors mt-8 pt-8 border-t border-zinc-800">Back
+                    to Store</a>
             </div>
         </div>
     </div>
@@ -317,22 +320,31 @@
                     document.getElementById('profileName').value = user.name || '';
                 }
 
-                loadOrders();
-
             } catch (e) {
                 console.error('Error loading profile:', e);
                 showToast('Failed to load profile');
+                if (document.getElementById('userNameDisplay')) document.getElementById('userNameDisplay').textContent = 'Error';
             }
         }
 
         async function loadOrders() {
-            const container = document.getElementById('ordersList');
             if (!container) return;
 
+            // Set loading state if not already set (or reset it to ensure user sees feedback)
+            if (!container.innerHTML.includes('Loading')) {
+                container.innerHTML = '<p class="text-gray-500">Loading orders...</p>';
+            }
+
             try {
+                // Add a simple timeout to the fetch
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
                 const res = await fetch(BASE_URL + '/api/orders', {
-                    headers: { 'Authorization': `Bearer ${accountToken}` }
+                    headers: { 'Authorization': `Bearer ${accountToken}` },
+                    signal: controller.signal
                 });
+                clearTimeout(timeoutId);
 
                 if (!res.ok) {
                     const txt = await res.text();
@@ -368,9 +380,12 @@
 `).join('');
             } catch (e) {
                 console.error('Error loading orders:', e);
+                let errorMsg = e.message;
+                if (e.name === 'AbortError') errorMsg = 'Request timed out. Please try again.';
+
                 container.innerHTML = `<div class="p-4 bg-red-900/20 border border-red-900 text-red-500 rounded">
                     <p class="font-bold">Failed to load orders</p>
-                    <p class="text-sm font-mono mt-1">${e.message}</p>
+                    <p class="text-sm font-mono mt-1">${errorMsg}</p>
                 </div>`;
             }
         }
@@ -467,6 +482,7 @@
 
         // Initial load
         loadProfile();
+        loadOrders();
     </script>
 </body>
 
