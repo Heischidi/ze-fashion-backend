@@ -575,10 +575,15 @@ if (window.location.pathname.match(/(collections|men|women|kids)\.html/)) {
           navContainer.insertBefore(adminLink, navContainer.firstChild);
         }
       }
+      // Show mobile logout button
+      const mobileSignOutBtn = document.getElementById('mobileSignOutBtn');
+      if (mobileSignOutBtn) {
+        mobileSignOutBtn.classList.remove('hidden');
+        mobileSignOutBtn.classList.add('signout'); // Add this class to trigger the global click listener
+      }
+
     } catch (e) { console.error('User menu setup error:', e); }
   }
-
-
 
   // Run setup on load
   if (document.readyState === 'loading') {

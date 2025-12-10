@@ -667,9 +667,9 @@
 
     // Mobile Menu Logic
     function initMobileMenu() {
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenuBtn = document.getElementById('adminMobileMenuBtn');
+        const mobileMenu = document.getElementById('adminMobileMenu');
+        const closeMenuBtn = document.getElementById('adminCloseMenuBtn');
         const mobileNavProducts = document.getElementById('mobileNavProducts');
         const mobileNavOrders = document.getElementById('mobileNavOrders');
         const mobileNavUsers = document.getElementById('mobileNavUsers');
