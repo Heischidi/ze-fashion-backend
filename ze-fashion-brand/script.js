@@ -292,7 +292,8 @@ if (window.location.pathname.match(/(collections|men|women|kids)\.html/)) {
   let currentPage = 1;
   let loading = false;
   let hasMore = true;
-  const productGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3'); // Adjust selector if needed
+  // Select grid that includes grid-cols-2 (for mobile)
+  const productGrid = document.querySelector('.grid.grid-cols-2.md\\:grid-cols-3') || document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
 
   async function loadProducts(reset = false) {
     const params = new URLSearchParams(window.location.search);
@@ -344,19 +345,22 @@ if (window.location.pathname.match(/(collections|men|women|kids)\.html/)) {
       const el = document.createElement('div');
       el.className = 'group cursor-pointer';
       el.innerHTML = `
-        <div class="relative overflow-hidden mb-4">
-          <img src="${img}" alt="${p.title}" class="w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-105">
+        <div class="relative overflow-hidden mb-2 md:mb-4">
+          <img src="${img}" alt="${p.title}" class="w-full h-[250px] md:h-[400px] object-cover transition-transform duration-700 group-hover:scale-105">
           <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-             <button onclick="event.stopPropagation(); addToCart(${p.id}, '${p.title.replace(/'/g, "\\'")}', '${img}', ${p.price})" class="bg-white text-black px-6 py-3 uppercase tracking-wider hover:bg-gold hover:text-white transition-colors">
+             <button onclick="event.stopPropagation(); addToCart(${p.id}, '${p.title.replace(/'/g, "\\'")}', '${img}', ${p.price})" class="hidden md:block bg-white text-black px-6 py-3 uppercase tracking-wider hover:bg-gold hover:text-white transition-colors">
                Quick Add
              </button>
+             <button onclick="event.stopPropagation(); addToCart(${p.id}, '${p.title.replace(/'/g, "\\'")}', '${img}', ${p.price})" class="md:hidden bg-white text-black p-2 rounded-full hover:bg-gold hover:text-white transition-colors shadow-lg">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+             </button>
           </div>
-          ${p.compare_at_price ? `<div class="absolute top-4 left-4 bg-red-600 text-white text-xs px-2 py-1">SALE</div>` : ''}
+          ${p.compare_at_price ? `<div class="absolute top-2 left-2 md:top-4 md:left-4 bg-red-600 text-white text-[10px] md:text-xs px-2 py-1">SALE</div>` : ''}
         </div>
-        <h3 class="font-serif text-lg mb-1">${p.title}</h3>
-        <div class="flex gap-2 items-center">
-          <p class="text-gray-600">₦${(p.price).toLocaleString()}</p>
-          ${p.compare_at_price ? `<p class="text-gray-400 line-through text-sm">₦${(p.compare_at_price).toLocaleString()}</p>` : ''}
+        <h3 class="font-serif text-sm md:text-lg mb-1 truncate">${p.title}</h3>
+        <div class="flex gap-2 items-center flex-wrap">
+          <p class="text-gray-600 text-sm md:text-base">₦${(p.price).toLocaleString()}</p>
+          ${p.compare_at_price ? `<p class="text-gray-400 line-through text-xs md:text-sm">₦${(p.compare_at_price).toLocaleString()}</p>` : ''}
         </div>
       `;
       el.addEventListener('click', () => window.location.href = `product.html?id=${p.id}`);
