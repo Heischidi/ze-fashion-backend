@@ -7,6 +7,7 @@
     <title>Checkout - Zë Luxury Fashion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css" />
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
 
 <body class="font-sans bg-gray-50">
@@ -200,75 +201,121 @@
             const checkoutForm = document.getElementById('checkoutForm');
             if (checkoutForm) {
                 checkoutForm.addEventListener('submit', async (e) => {
-                    e.preventDefault(); // Critical: Stop reload
+                    e.preventDefault();
 
                     const submitBtn = e.target.querySelector('button[type="submit"]');
                     const originalText = submitBtn ? submitBtn.textContent : 'Place Order';
+
+                    // Basic Validation
+                    const requiredIds = ['firstName', 'lastName', 'address', 'city', 'postalCode', 'phone'];
+                    let isValid = true;
+                    requiredIds.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (!el || !el.value.trim()) isValid = false;
+                    });
+
+                    if (!isValid) {
+                        showToast('Please fill in all required fields');
+                        return;
+                    }
+
                     if (submitBtn) {
                         submitBtn.textContent = 'Processing...';
                         submitBtn.disabled = true;
                     }
 
+                    const token = sessionStorage.getItem('ze_token');
+                    if (!token) {
+                        showToast('Please sign in to complete your order');
+                        setTimeout(() => window.location.href = 'signin.html?redirect=checkout.html', 1500);
+                        return;
+                    }
+
+                    // Extract Email from Token
+                    let userEmail = '';
                     try {
-                        const token = sessionStorage.getItem('ze_token');
-                        if (!token) {
-                            showToast('Please sign in to complete your order');
-                            // Store current URL to redirect back
-                            setTimeout(() => window.location.href = 'signin.html?redirect=checkout.html', 1500);
-                            return;
-                        }
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        userEmail = payload.email;
+                    } catch (e) {
+                        console.error("Token decode fail", e);
+                        showToast('Session error. Please login again.');
+                        return;
+                    }
 
-                        // Gather FormData
-                        const shippingAddress = {
-                            firstName: document.getElementById('firstName')?.value || '',
-                            lastName: document.getElementById('lastName')?.value || '',
-                            address: document.getElementById('address')?.value || '',
-                            city: document.getElementById('city')?.value || '',
-                            postalCode: document.getElementById('postalCode')?.value || '',
-                            phone: document.getElementById('phone')?.value || ''
-                        };
+                    const totalAmount = parseFloat(document.getElementById('summaryTotal').textContent.replace(/[^\d.]/g, ''));
 
-                        const isGift = document.getElementById('isGift')?.checked || false;
-                        const giftMessage = document.getElementById('giftMessage')?.value || '';
-                        const recipientEmail = document.getElementById('recipientEmail')?.value || '';
-
-                        const res = await fetch(`${API_ROOT}/api/orders`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${token}`
-                            },
-                            body: JSON.stringify({
-                                items: cart,
-                                total: total,
-                                shipping_address: shippingAddress,
-                                is_gift: isGift,
-                                gift_message: giftMessage,
-                                recipient_email: recipientEmail
-                            })
-                        });
-
-                        if (res.ok) {
-                            localStorage.removeItem('ze_cart_v1');
-                            showToast('Order Processed Successfully!');
-                            setTimeout(() => window.location.href = 'track-order.html', 1000);
-                        } else {
-                            const data = await res.json();
-                            showToast(data.error || 'Failed to place order');
+                    // Paystack Inline
+                    const paystackHandler = PaystackPop.setup({
+                        key: 'pk_test_1babdc3728e27cbef45f856351a101b80c2a7902',
+                        email: userEmail,
+                        amount: Math.ceil(totalAmount * 100), // Kobo
+                        currency: 'NGN',
+                        callback: async function (response) {
+                            // Payment Complete! Post Order
+                            await createOrder(response.reference);
+                        },
+                        onClose: function () {
+                            showToast('Payment cancelled');
                             if (submitBtn) {
                                 submitBtn.textContent = originalText;
                                 submitBtn.disabled = false;
                             }
                         }
-                    } catch (err) {
-                        console.error(err);
-                        showToast('Error: ' + err.message);
-                        if (err.message.includes('Failed to fetch')) {
-                            showToast('Could not connect to server');
-                        }
-                        if (submitBtn) {
-                            submitBtn.textContent = originalText;
-                            submitBtn.disabled = false;
+                    });
+
+                    paystackHandler.openIframe();
+
+                    async function createOrder(ref) {
+                        try {
+                            const shippingAddress = {
+                                firstName: document.getElementById('firstName')?.value || '',
+                                lastName: document.getElementById('lastName')?.value || '',
+                                address: document.getElementById('address')?.value || '',
+                                city: document.getElementById('city')?.value || '',
+                                postalCode: document.getElementById('postalCode')?.value || '',
+                                phone: document.getElementById('phone')?.value || ''
+                            };
+
+                            const isGift = document.getElementById('isGift')?.checked || false;
+                            const giftMessage = document.getElementById('giftMessage')?.value || '';
+                            const recipientEmail = document.getElementById('recipientEmail')?.value || '';
+
+                            const res = await fetch(`${API_ROOT}/api/orders`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
+                                },
+                                body: JSON.stringify({
+                                    items: cart,
+                                    total: totalAmount,
+                                    shipping_address: shippingAddress,
+                                    is_gift: isGift,
+                                    gift_message: giftMessage,
+                                    recipient_email: recipientEmail,
+                                    payment_reference: ref
+                                })
+                            });
+
+                            if (res.ok) {
+                                localStorage.removeItem('ze_cart_v1');
+                                showToast('Order Processed Successfully!');
+                                setTimeout(() => window.location.href = 'track-order.html', 1000);
+                            } else {
+                                const data = await res.json();
+                                showToast(data.error || 'Failed to place order');
+                                if (submitBtn) {
+                                    submitBtn.textContent = originalText;
+                                    submitBtn.disabled = false;
+                                }
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            showToast('Error: ' + err.message);
+                            if (submitBtn) {
+                                submitBtn.textContent = originalText;
+                                submitBtn.disabled = false;
+                            }
                         }
                     }
                 });

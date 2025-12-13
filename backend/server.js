@@ -31,6 +31,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+const paymentRoutes = require('./routes/payment');
+app.use('/api/payment', paymentRoutes);
+
 // Serve static frontend files and images
 // Serve images if available (e.g. uploads), but disable full frontend serving for production API
 // app.use("/", express.static(FRONTEND_DIR));
