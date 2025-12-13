@@ -236,34 +236,65 @@
                     try {
                         const payload = JSON.parse(atob(token.split('.')[1]));
                         userEmail = payload.email;
+                        if (!userEmail) throw new Error("Email missing in token");
                     } catch (e) {
                         console.error("Token decode fail", e);
-                        showToast('Session error. Please login again.');
+                        showToast('Session error: Could not get email. Please login again.');
+                        if (submitBtn) {
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                        }
                         return;
                     }
 
                     const totalAmount = parseFloat(document.getElementById('summaryTotal').textContent.replace(/[^\d.]/g, ''));
-
-                    // Paystack Inline
-                    const paystackHandler = PaystackPop.setup({
-                        key: 'pk_test_1babdc3728e27cbef45f856351a101b80c2a7902',
-                        email: userEmail,
-                        amount: Math.ceil(totalAmount * 100), // Kobo
-                        currency: 'NGN',
-                        callback: async function (response) {
-                            // Payment Complete! Post Order
-                            await createOrder(response.reference);
-                        },
-                        onClose: function () {
-                            showToast('Payment cancelled');
-                            if (submitBtn) {
-                                submitBtn.textContent = originalText;
-                                submitBtn.disabled = false;
-                            }
+                    if (isNaN(totalAmount) || totalAmount <= 0) {
+                        showToast('Invalid Order Amount');
+                        if (submitBtn) {
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
                         }
-                    });
+                        return;
+                    }
 
-                    paystackHandler.openIframe();
+                    if (typeof PaystackPop === 'undefined') {
+                        showToast('Paystack failed to load. Please check your internet connection.');
+                        if (submitBtn) {
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                        }
+                        return;
+                    }
+
+                    try {
+                        // Paystack Inline
+                        const paystackHandler = PaystackPop.setup({
+                            key: 'pk_test_1babdc3728e27cbef45f856351a101b80c2a7902',
+                            email: userEmail,
+                            amount: Math.ceil(totalAmount * 100), // Kobo
+                            currency: 'NGN',
+                            callback: async function (response) {
+                                // Payment Complete! Post Order
+                                await createOrder(response.reference);
+                            },
+                            onClose: function () {
+                                showToast('Payment cancelled');
+                                if (submitBtn) {
+                                    submitBtn.textContent = originalText;
+                                    submitBtn.disabled = false;
+                                }
+                            }
+                        });
+
+                        paystackHandler.openIframe();
+                    } catch (err) {
+                        console.error("Paystack Error", err);
+                        showToast("Error initializing payment: " + err.message);
+                        if (submitBtn) {
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    }
 
                     async function createOrder(ref) {
                         try {
