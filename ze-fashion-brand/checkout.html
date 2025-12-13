@@ -273,9 +273,9 @@
                             email: userEmail,
                             amount: Math.ceil(totalAmount * 100), // Kobo
                             currency: 'NGN',
-                            callback: async function (response) {
+                            callback: function (response) {
                                 // Payment Complete! Post Order
-                                await createOrder(response.reference);
+                                createOrder(response.reference);
                             },
                             onClose: function () {
                                 showToast('Payment cancelled');
