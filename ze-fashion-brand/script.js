@@ -203,7 +203,7 @@ async function syncCart() {
   const token = sessionStorage.getItem('ze_token');
   if (!token) return;
 
-  const localCart = JSON.parse(localStorage.getItem("ze_cart_v1") || "[]");
+  const localCart = JSON.parse(localStorage.getItem("ze_cart_v2") || "[]");
   if (localCart.length > 0) {
     // Push local items to server
     try {
@@ -225,14 +225,14 @@ async function syncCart() {
     });
     const data = await res.json();
     if (data.items) {
-      localStorage.setItem("ze_cart_v1", JSON.stringify(data.items));
+      localStorage.setItem("ze_cart_v2", JSON.stringify(data.items));
       updateCartCount();
     }
   } catch (e) { console.error(e); }
 }
 
 window.addToCart = async function (id, title, image, price) {
-  let cart = JSON.parse(localStorage.getItem("ze_cart_v1") || "[]");
+  let cart = JSON.parse(localStorage.getItem("ze_cart_v2") || "[]");
   const existing = cart.find(item => item.id === id);
   if (existing) {
     existing.quantity += 1;
@@ -245,14 +245,14 @@ window.addToCart = async function (id, title, image, price) {
       quantity: 1,
     });
   }
-  localStorage.setItem("ze_cart_v1", JSON.stringify(cart));
+  localStorage.setItem("ze_cart_v2", JSON.stringify(cart));
   showToast("Added to cart!");
   updateCartCount();
   await syncCart();
 };
 
 function updateCartCount() {
-  const cart = JSON.parse(localStorage.getItem("ze_cart_v1") || "[]");
+  const cart = JSON.parse(localStorage.getItem("ze_cart_v2") || "[]");
   const count = cart.reduce((acc, item) => acc + item.quantity, 0);
   document.querySelectorAll('.cart-count').forEach(el => {
     el.textContent = count;
@@ -529,7 +529,7 @@ if (window.location.pathname.match(/(collections|men|women|kids)\.html/)) {
       if (confirm('Are you sure you want to sign out?')) {
         sessionStorage.removeItem('ze_token');
         sessionStorage.removeItem('ze_user');
-        localStorage.removeItem('ze_cart_v1');
+        localStorage.removeItem('ze_cart_v2');
         showToast('Signed out');
         setTimeout(() => window.location.href = 'index.html', 500);
       }

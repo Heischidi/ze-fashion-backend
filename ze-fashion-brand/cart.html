@@ -276,7 +276,7 @@
     <script src="script.js"></script>
     <script>
         function renderCart() {
-            const cart = JSON.parse(localStorage.getItem("ze_cart_v1") || "[]");
+            const cart = JSON.parse(localStorage.getItem("ze_cart_v2") || "[]");
             const container = document.getElementById('cartItemsContainer');
             const subtotalEl = document.getElementById('subtotal');
             const taxEl = document.getElementById('tax');
@@ -324,9 +324,9 @@
         }
 
         async function removeFromCart(index) {
-            let cart = JSON.parse(localStorage.getItem("ze_cart_v1") || "[]");
+            let cart = JSON.parse(localStorage.getItem("ze_cart_v2") || "[]");
             cart.splice(index, 1);
-            localStorage.setItem("ze_cart_v1", JSON.stringify(cart));
+            localStorage.setItem("ze_cart_v2", JSON.stringify(cart));
             renderCart();
             updateCartCount();
 
