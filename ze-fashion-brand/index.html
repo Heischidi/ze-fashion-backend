@@ -36,10 +36,41 @@
     .slide-content>* {
       transition: inherit;
     }
+
+    /* Waitlist Overlay */
+    #waitlist-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      background-color: black;
+    }
   </style>
 </head>
 
 <body class="font-sans bg-black text-white">
+  <!-- Waitlist Overlay -->
+  <div id="waitlist-overlay">
+    <iframe src="https://ze-fashion.vercel.app/" style="width:100%; height:100%; border:none;"></iframe>
+  </div>
+  <script>
+    (function () {
+      // Developer Mode Bypass
+      // Add ?dev=true to URL to hide the overlay permanently (saved in localStorage)
+      const urlParams = new URLSearchParams(window.location.search);
+      const isDevQuery = urlParams.get('dev') === 'true';
+      const isDevStorage = localStorage.getItem('devMode') === 'true';
+
+      if (isDevQuery) {
+        localStorage.setItem('devMode', 'true');
+        document.getElementById('waitlist-overlay').style.display = 'none';
+      } else if (isDevStorage) {
+        document.getElementById('waitlist-overlay').style.display = 'none';
+      }
+    })();
+  </script>
   <!-- Navigation -->
   <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
     <div class="max-w-7xl mx-auto px-6 py-4">
