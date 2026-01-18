@@ -59,7 +59,13 @@
     (function () {
       // Developer Mode Bypass
       // Add ?dev=true to URL to hide the overlay permanently (saved in localStorage)
+      // Add ?dev=false to URL to restore the overlay
       const urlParams = new URLSearchParams(window.location.search);
+
+      if (urlParams.get('dev') === 'false') {
+        localStorage.removeItem('devMode');
+      }
+
       const isDevQuery = urlParams.get('dev') === 'true';
       const isDevStorage = localStorage.getItem('devMode') === 'true';
 
