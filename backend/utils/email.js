@@ -3,9 +3,7 @@ const nodemailer = require('nodemailer');
 // Configure transporter
 // NOTE: In production, use environment variables for these values
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.ethereal.email',
-    port: process.env.SMTP_PORT || 587,
-    secure: false, // true for 465, false for other ports
+    service: 'gmail', // Automatically sets host to smtp.gmail.com and handles ports
     auth: {
         user: process.env.SMTP_USER || 'ethereal_user',
         pass: process.env.SMTP_PASS || 'ethereal_pass'
