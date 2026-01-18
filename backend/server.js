@@ -51,6 +51,7 @@ app.use('/api/orders', require('./routes/orders'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/wishlist', require('./routes/wishlist'));
 app.use('/api/profile', require('./routes/profile'));
+app.use('/api/waitlist', require('./routes/waitlist'));
 
 // Health check
 app.get("/api/health", (req, res) => res.json({ ok: true }));

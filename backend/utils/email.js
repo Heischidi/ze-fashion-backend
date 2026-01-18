@@ -107,4 +107,40 @@ async function sendGiftNotification(to, giftMessage, senderName, items) {
     }
 }
 
-module.exports = { sendVerificationEmail, sendGiftNotification };
+async function sendWaitlistWelcome(to) {
+    const mailOptions = {
+        from: '"Zë Luxury Fashion" <no-reply@zefashion.com>',
+        to: to,
+        subject: 'Welcome to the Zë Waitlist',
+        html: `
+            <div style="font-family: 'Times New Roman', serif; max-width: 600px; margin: 0 auto; background-color: #000; color: #fff; padding: 40px 20px;">
+                <h1 style="text-align: center; letter-spacing: 5px; margin-bottom: 40px; border-bottom: 1px solid #333; padding-bottom: 20px;">ZË</h1>
+                
+                <h2 style="text-align: center; font-weight: normal; letter-spacing: 1px; color: #D4AF37;">YOU ARE ON THE LIST</h2>
+                
+                <p style="margin: 30px 0; line-height: 1.8; text-align: center; color: #ccc;">
+                    Thank you for your interest in Zë. You have successfully secured your spot on our exclusive waitlist.
+                </p>
+
+                <p style="margin: 20px 0; line-height: 1.8; text-align: center; color: #ccc;">
+                    We will notify you as soon as our collection is available for purchase. Prepare for a new era of elegance.
+                </p>
+                
+                <div style="margin-top: 60px; text-align: center; font-size: 12px; color: #555;">
+                    &copy; 2025 Zë Luxury Fashion.
+                </div>
+            </div>
+        `
+    };
+
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Waitlist email sent: %s', info.messageId);
+        return true;
+    } catch (error) {
+        console.error('Error sending waitlist email:', error);
+        return false;
+    }
+}
+
+module.exports = { sendVerificationEmail, sendGiftNotification, sendWaitlistWelcome };
