@@ -3,16 +3,17 @@ const nodemailer = require('nodemailer');
 // Configure transporter
 // NOTE: In production, use environment variables for these values
 // Configure transporter
+const smtpPort = parseInt(process.env.SMTP_PORT || '587');
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // Use STARTTLS
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: smtpPort,
+    secure: smtpPort === 465,
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
     },
     debug: true,
-    logger: true // log information to console
+    logger: true
 });
 
 async function sendVerificationEmail(email, verificationLink) {
