@@ -16,7 +16,12 @@ const IMAGES_DIR = path.join(__dirname, "images");
 const session = require('express-session');
 const passport = require('./config/passport');
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://ze-fashion-backend.vercel.app', 'http://localhost:5500', 'http://127.0.0.1:5500'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
