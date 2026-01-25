@@ -113,7 +113,7 @@ async function sendGiftNotification(to, giftMessage, senderName, items) {
 
 async function sendWaitlistWelcome(to) {
     const mailOptions = {
-        from: `"Zë Luxury Fashion" <${process.env.SMTP_USER || 'no-reply@zefashion.com'}>`,
+        from: '"Zë Luxury Fashion" <ze.thebrand@gmail.com>',
         to: to,
         subject: 'Welcome to the Zë Waitlist',
         html: `
