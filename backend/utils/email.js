@@ -117,15 +117,15 @@ async function sendWaitlistWelcome(to, firstName, lastName, ticketId) {
         to: to,
         subject: `Welcome to the Zë Waitlist, ${firstName}!`,
         attachments: [{
-            filename: 'Logo.png',
-            path: __dirname + '/../images/Logo.png',
-            cid: 'logo' // same cid value as in the html img src
+            filename: 'EventTopper.jpg',
+            path: __dirname + '/../images/EventTopper.jpg',
+            cid: 'eventFlyer' // new cid
         }],
         html: `
             <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; color: #000000; padding: 20px;">
                 
                 <div style="text-align: center; margin-bottom: 30px;">
-                   <img src="cid:logo" alt="ZE Logo" style="width: 150px; height: auto;">
+                   <img src="cid:eventFlyer" alt="ZE Event Flyer" style="width: 100%; height: auto; border-radius: 8px;">
                 </div>
 
                 <p style="font-size: 16px; margin-bottom: 20px;">Hello <strong>${firstName}</strong>,</p>
