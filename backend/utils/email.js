@@ -111,27 +111,47 @@ async function sendGiftNotification(to, giftMessage, senderName, items) {
     }
 }
 
-async function sendWaitlistWelcome(to) {
+async function sendWaitlistWelcome(to, firstName, lastName, ticketId) {
     const mailOptions = {
         from: '"Zë Luxury Fashion" <ze.thebrand@gmail.com>',
         to: to,
-        subject: 'Welcome to the Zë Waitlist',
+        subject: `Welcome to the Zë Waitlist, ${firstName}!`,
+        attachments: [{
+            filename: 'Logo.png',
+            path: __dirname + '/../images/Logo.png',
+            cid: 'logo' // same cid value as in the html img src
+        }],
         html: `
-            <div style="font-family: 'Times New Roman', serif; max-width: 600px; margin: 0 auto; background-color: #000; color: #fff; padding: 40px 20px;">
-                <h1 style="text-align: center; letter-spacing: 5px; margin-bottom: 40px; border-bottom: 1px solid #333; padding-bottom: 20px;">ZË</h1>
+            <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; color: #000000; padding: 20px;">
                 
-                <h2 style="text-align: center; font-weight: normal; letter-spacing: 1px; color: #D4AF37;">YOU ARE ON THE LIST</h2>
-                
-                <p style="margin: 30px 0; line-height: 1.8; text-align: center; color: #ccc;">
-                    Thank you for your interest in Zë. You have successfully secured your spot on our exclusive waitlist.
+                <div style="text-align: center; margin-bottom: 30px;">
+                   <img src="cid:logo" alt="ZE Logo" style="width: 150px; height: auto;">
+                </div>
+
+                <p style="font-size: 16px; margin-bottom: 20px;">Hello <strong>${firstName}</strong>,</p>
+
+                <p style="font-size: 16px; margin-bottom: 20px; line-height: 1.5;">
+                    Welcome to something different. Your registration for the <strong>ZË Fashion × Creativity Exhibition — STILL</strong> is officially confirmed and we're thrilled to have you.
                 </p>
 
-                <p style="margin: 20px 0; line-height: 1.8; text-align: center; color: #ccc;">
-                    We will notify you as soon as our collection is available for purchase. Prepare for a new era of elegance.
+                <p style="font-size: 16px; margin-bottom: 30px; line-height: 1.5;">
+                    This isn't just another event. It's an immersive experience — a moment where creativity, fashion, art, and atmosphere come alive in a way Abuja has never seen before.
                 </p>
-                
-                <div style="margin-top: 60px; text-align: center; font-size: 12px; color: #555;">
-                    &copy; 2025 Zë Luxury Fashion.
+
+                <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Event Details</h3>
+
+                <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px;">
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Date:</strong> Dec 15, 2025</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Time:</strong> 12.00 PM</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Location:</strong> The Commune Studio, Abuja</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Guest:</strong> ${firstName} ${lastName}</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Ticket Type:</strong> General Entry</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Ticket ID:</strong> ${ticketId}</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Amount Paid:</strong> ₦0 (Free Entry)</p>
+                </div>
+
+                <div style="margin-top: 40px; text-align: center; font-size: 12px; color: #888;">
+                     &copy; 2025 Zë Luxury Fashion.
                 </div>
             </div>
         `
