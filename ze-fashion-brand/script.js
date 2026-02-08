@@ -597,3 +597,20 @@ if (window.location.pathname.match(/(collections|men|women|kids)\.html/)) {
     setupUserMenu();
   }
 })();
+
+// Lookbook Scroll Arrows
+document.addEventListener('DOMContentLoaded', () => {
+  const scrollLeftBtn = document.getElementById('scrollLeft');
+  const scrollRightBtn = document.getElementById('scrollRight');
+  const scrollContainer = document.getElementById('lookbookContainer');
+
+  if (scrollLeftBtn && scrollRightBtn && scrollContainer) {
+    scrollLeftBtn.addEventListener('click', () => {
+      scrollContainer.scrollBy({ left: -400, behavior: 'smooth' });
+    });
+
+    scrollRightBtn.addEventListener('click', () => {
+      scrollContainer.scrollBy({ left: 400, behavior: 'smooth' });
+    });
+  }
+});

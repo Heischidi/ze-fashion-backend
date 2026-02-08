@@ -301,3 +301,45 @@ footer h4 {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
+
+/* Lookbook Horizontal Scroll */
+.horizontal-scroll-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  gap: 1.5rem;
+  padding-bottom: 2rem;
+  /* Space for scrollbar or shadow */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+}
+
+.horizontal-scroll-container::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Safari */
+}
+
+.lookbook-item {
+  scroll-snap-align: center;
+  flex: 0 0 auto;
+  width: 85vw;
+  /* Mobile width */
+  max-width: 400px;
+  /* Tablet/Desktop max width */
+  transition: transform 0.3s ease;
+}
+
+.lookbook-item:hover {
+  transform: scale(1.02);
+}
+
+@media (min-width: 768px) {
+  .horizontal-scroll-container {
+    padding-left: max(calc((100vw - 1280px) / 2), 1.5rem);
+    padding-right: max(calc((100vw - 1280px) / 2), 1.5rem);
+  }
+}
