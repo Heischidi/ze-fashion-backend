@@ -94,7 +94,10 @@
 
         <!-- Input -->
         <div class="flex flex-col gap-4 w-full items-center z-20 input container-input">
-            <form id="waitlist-form" class="w-full relative">
+            <form id="waitlist-form" class="w-full relative flex flex-col gap-3">
+                <input type="text" id="name" required placeholder="Full Name"
+                    class="w-full px-6 py-4 rounded-full bg-gray-100 shadow-inner outline-none focus:ring-2 focus:ring-primary/50 transition-all text-black placeholder-gray-500">
+
                 <div class="relative w-full">
                     <input type="email" id="email" required placeholder="Your Email"
                         class="w-full px-6 py-4 rounded-full bg-gray-100 shadow-inner outline-none focus:ring-2 focus:ring-primary/50 transition-all text-black placeholder-gray-500 pr-36">
@@ -182,10 +185,16 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
+            const name = document.getElementById('name').value;
             errorMsg.textContent = '';
 
             if (!email || !email.includes('@')) {
                 errorMsg.textContent = 'Please enter a valid email address.';
+                return;
+            }
+
+            if (!name) {
+                errorMsg.textContent = 'Please enter your name.';
                 return;
             }
 
@@ -197,7 +206,7 @@
                 const res = await fetch(`${API_BASE}/api/waitlist`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
+                    body: JSON.stringify({ email, name })
                 });
 
                 const data = await res.json();

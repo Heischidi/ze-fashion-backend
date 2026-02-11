@@ -4,10 +4,20 @@ const { sendWaitlistWelcome } = require('../utils/email');
 
 // POST /api/waitlist
 router.post('/', async (req, res) => {
-    const { email, firstName, lastName } = req.body;
+    const { email, name, firstName, lastName } = req.body;
 
     if (!email) {
         return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // Handle name splitting if only name is provided
+    let finalFirstName = firstName;
+    let finalLastName = lastName;
+
+    if (name && !firstName && !lastName) {
+        const parts = name.trim().split(' ');
+        finalFirstName = parts[0];
+        finalLastName = parts.slice(1).join(' ') || '';
     }
 
     // Generate Ticket ID (8 chars alphanumeric)
@@ -17,7 +27,7 @@ router.post('/', async (req, res) => {
     // For now, just send the email
 
     try {
-        const sent = await sendWaitlistWelcome(email, firstName, lastName, ticketId);
+        const sent = await sendWaitlistWelcome(email, finalFirstName || 'Fashion Lover', finalLastName || '', ticketId);
         if (sent) {
             res.json({ success: true, message: 'Joined waitlist successfully' });
         } else {
